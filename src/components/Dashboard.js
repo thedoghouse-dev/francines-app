@@ -31,7 +31,7 @@ const Dashboard = ({ onNavigate }) => {
       </div>
 
       {/* Activity Cards */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
         {/* Word Search Card */}
         <div className="card-elegant">
@@ -96,6 +96,29 @@ const Dashboard = ({ onNavigate }) => {
           </div>
           <button
             onClick={() => onNavigate('memoryMatch')}
+            className="btn-primary w-full"
+          >
+            PLAY
+          </button>
+        </div>
+
+        {/* Solitaire Card */}
+        <div className="card-elegant">
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 mx-auto mb-4 bg-spa-teal rounded-full flex items-center justify-center">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-3xl sm:text-4xl font-semibold text-charcoal mb-3">
+              Solitaire
+            </h3>
+            <p className="text-xl sm:text-2xl text-slate-grey mb-6">
+              Classic card game with hints
+            </p>
+          </div>
+          <button
+            onClick={() => onNavigate('solitaire')}
             className="btn-primary w-full"
           >
             PLAY

@@ -3,6 +3,7 @@ import Dashboard from './components/Dashboard';
 import WordSearch from './components/WordSearch';
 import SchnauzzerGallery from './components/SchnauzzerGallery';
 import MemoryMatch from './components/MemoryMatch';
+import Solitaire from './components/Solitaire';
 
 function App() {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -17,6 +18,8 @@ function App() {
         return <SchnauzzerGallery onExit={() => setCurrentView('dashboard')} />;
       case 'memoryMatch':
         return <MemoryMatch onExit={() => setCurrentView('dashboard')} />;
+      case 'solitaire':
+        return <Solitaire onExit={() => setCurrentView('dashboard')} />;
       default:
         return <Dashboard onNavigate={setCurrentView} />;
     }
