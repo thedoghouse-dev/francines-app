@@ -9,32 +9,32 @@ const SchnauzzerGallery = ({ onExit }) => {
     {
       title: 'Classic Schnauzer Portrait',
       fact: 'Schnauzers originated in Germany and were bred to be versatile farm dogs, excelling at catching rats and guarding property.',
-      color: 'from-slate-grey-light to-slate-grey'
+      image: '/images/schnauzers/schnauzer-1.jpg'
     },
     {
       title: 'Playful Schnauzer',
       fact: 'The name "Schnauzer" comes from the German word for "snout" or "muzzle," referring to their distinctive bearded face.',
-      color: 'from-spa-teal-light to-spa-teal'
+      image: '/images/schnauzers/schnauzer-2.jpg'
     },
     {
       title: 'Alert Watchdog',
       fact: 'Schnauzers come in three sizes: Miniature, Standard, and Giant. Despite size differences, they all share the same spirited personality.',
-      color: 'from-gold-leaf-light to-gold-leaf'
+      image: '/images/schnauzers/schnauzer-3.jpg'
     },
     {
       title: 'Loyal Companion',
       fact: 'Schnauzers are known for being incredibly loyal and form strong bonds with their families, often choosing a favorite person.',
-      color: 'from-slate-grey to-spa-teal-dark'
+      image: '/images/schnauzers/schnauzer-4.jpg'
     },
     {
       title: 'Intelligent Friend',
       fact: 'These dogs are highly intelligent and trainable, ranking among the top breeds for obedience and working intelligence.',
-      color: 'from-spa-teal to-charcoal'
+      image: '/images/schnauzers/schnauzer-5.jpg'
     },
     {
       title: 'Distinguished Gentleman',
       fact: 'With proper grooming, a Schnauzer\'s coat is hypoallergenic and doesn\'t shed much, making them excellent companions for people with allergies.',
-      color: 'from-warm-cream-dark to-slate-grey'
+      image: '/images/schnauzers/schnauzer-6.jpg'
     },
   ];
 
@@ -65,32 +65,46 @@ const SchnauzzerGallery = ({ onExit }) => {
       <div className="max-w-5xl mx-auto">
         {/* Image Display Area */}
         <div className="card-elegant mb-8">
-          {/* Placeholder Image - Using gradient backgrounds with elegant line art concept */}
-          <div className={`
-            w-full aspect-[4/3] rounded-xl mb-6
-            bg-gradient-to-br ${currentImage.color}
-            flex items-center justify-center
-            border-4 border-slate-grey-light/30
-          `}>
-            <div className="text-center p-8">
-              {/* Dog icon SVG */}
-              <svg
-                className="w-48 h-48 mx-auto mb-6 text-white/90"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                />
-              </svg>
-              <p className="text-3xl sm:text-4xl font-semibold text-white">
-                {currentImage.title}
-              </p>
+          {/* Schnauzer Photo */}
+          <div className="relative w-full aspect-[4/3] rounded-xl mb-6 overflow-hidden bg-slate-grey-light/20">
+            <img
+              src={currentImage.image}
+              alt={currentImage.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Fallback if image doesn't load
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            {/* Fallback placeholder */}
+            <div className="absolute inset-0 bg-gradient-to-br from-spa-teal-light to-spa-teal flex items-center justify-center" style={{ display: 'none' }}>
+              <div className="text-center p-8">
+                <svg
+                  className="w-32 h-32 mx-auto mb-4 text-white/90"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                  />
+                </svg>
+                <p className="text-xl sm:text-2xl text-white">
+                  Add image: {currentImage.image}
+                </p>
+              </div>
             </div>
+          </div>
+
+          {/* Image Title */}
+          <div className="text-center mb-4">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-charcoal">
+              {currentImage.title}
+            </h2>
           </div>
 
           {/* Image Counter */}
