@@ -7,13 +7,25 @@ const WordSearch = ({ onExit }) => {
   const [selectedCells, setSelectedCells] = useState([]);
   const [firstClick, setFirstClick] = useState(null);
 
+  // Word bank for puzzle generation
+  const WORD_BANK = [
+    'SCHNAUZER', 'LOYAL', 'FRIEND', 'BARK', 'PLAY', 'WALK',
+    'FETCH', 'TREAT', 'CUDDLE', 'GENTLE', 'SMART', 'BRAVE',
+    'HOME', 'HAPPY', 'TRUST', 'CARE', 'KIND', 'CALM',
+    'PEACE', 'GUARD', 'WATCH', 'LOVE', 'FAMILY', 'PATIENT',
+    'NOBLE', 'GRACE', 'DEVOTED', 'PROTECT', 'COMPANION'
+  ];
+
   // Generate a new puzzle on mount
   useEffect(() => {
     generatePuzzle();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const generatePuzzle = () => {
-    const wordList = ['SCHNAUZER', 'LOYAL', 'FRIEND', 'BARK', 'PLAY', 'WALK'];
+    // Randomly select 6 words from the word bank
+    const shuffledBank = [...WORD_BANK].sort(() => Math.random() - 0.5);
+    const wordList = shuffledBank.slice(0, 6);
     const gridSize = 8;
     const newGrid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
     const placedWords = [];
