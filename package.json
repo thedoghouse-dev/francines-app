@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Premium digital activity suite for Francine",
   "private": true,
-  "homepage": "https://thedoghouse-dev.github.io/francines-app",
+  "homepage": "https://francinesapp.com",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -15,7 +15,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build --repo https://github.com/thedoghouse-dev/francines-app.git"
   },
   "eslintConfig": {
     "extends": [
