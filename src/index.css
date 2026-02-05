@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-warm-cream font-sans text-charcoal;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-spa-teal text-white font-semibold py-4 px-8 rounded-xl shadow-lg
+           hover:bg-spa-teal-dark transition-all duration-300 text-xl sm:text-2xl
+           active:scale-95 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply bg-slate-grey text-white font-semibold py-4 px-8 rounded-xl shadow-lg
+           hover:bg-slate-grey-dark transition-all duration-300 text-xl sm:text-2xl
+           active:scale-95 cursor-pointer;
+  }
+
+  .card-elegant {
+    @apply bg-white rounded-2xl shadow-xl p-6 border border-slate-grey-light/30;
+  }
+
+  .gold-box {
+    @apply bg-gradient-to-br from-gold-leaf-light to-gold-leaf
+           text-charcoal-dark font-bold rounded-2xl shadow-2xl p-8
+           border-2 border-gold-leaf-dark;
+  }
+}
