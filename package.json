@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Premium digital activity suite for Francine",
   "private": true,
-  "homepage": "https://YOURUSERNAME.github.io/francines-app",
+  "homepage": "https://thedoghouse-dev.github.io/francines-app",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
