@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/francines-app/static/css/main.4637aea6.css",
+    "main.js": "/francines-app/static/js/main.a64de13f.js",
+    "index.html": "/francines-app/index.html",
+    "main.4637aea6.css.map": "/francines-app/static/css/main.4637aea6.css.map",
+    "main.a64de13f.js.map": "/francines-app/static/js/main.a64de13f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4637aea6.css",
+    "static/js/main.a64de13f.js"
+  ]
+}
