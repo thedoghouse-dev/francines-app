@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactGA from 'react-ga4';
 import Dashboard from './components/Dashboard';
 import WordSearch from './components/WordSearch';
 import SchnauzzerGallery from './components/SchnauzzerGallery';
@@ -7,6 +8,29 @@ import Solitaire from './components/Solitaire';
 
 function App() {
   const [currentView, setCurrentView] = useState('dashboard');
+
+  // Initialize Google Analytics
+  useEffect(() => {
+    ReactGA.initialize('G-MNGWTM1XE3');
+    // Track initial page view
+    ReactGA.send({ hitType: 'pageview', page: '/dashboard', title: 'Dashboard' });
+  }, []);
+
+  // Track page views when view changes
+  useEffect(() => {
+    const pageMap = {
+      dashboard: { page: '/dashboard', title: 'Dashboard' },
+      wordSearch: { page: '/word-search', title: 'Word Search' },
+      gallery: { page: '/gallery', title: 'Schnauzer Gallery' },
+      memoryMatch: { page: '/memory-match', title: 'Memory Match' },
+      solitaire: { page: '/solitaire', title: 'Solitaire' }
+    };
+
+    const pageData = pageMap[currentView];
+    if (pageData) {
+      ReactGA.send({ hitType: 'pageview', page: pageData.page, title: pageData.title });
+    }
+  }, [currentView]);
 
   const renderView = () => {
     switch (currentView) {
