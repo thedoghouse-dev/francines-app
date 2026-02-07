@@ -37,7 +37,7 @@ const Dashboard = ({ onNavigate }) => {
       </header>
 
       {/* Activity Cards */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
 
         {/* Solitaire Card */}
         <div className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white via-peach-light to-white border-4 border-white shadow-xl relative overflow-hidden">
@@ -126,34 +126,6 @@ const Dashboard = ({ onNavigate }) => {
           </button>
         </div>
 
-        {/* Schnauzer Gallery Card */}
-        <div className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white via-warm-cream-light to-white border-4 border-white shadow-xl relative overflow-hidden">
-          {/* Decorative corner flourishes */}
-          <div className="absolute top-2 left-2 text-3xl text-gold-leaf-dark opacity-40">❀</div>
-          <div className="absolute top-2 right-2 text-3xl text-gold-leaf opacity-40">✿</div>
-          <div className="absolute bottom-2 left-2 text-3xl text-gold-leaf opacity-40">✿</div>
-          <div className="absolute bottom-2 right-2 text-3xl text-gold-leaf-dark opacity-40">❀</div>
-
-          <div className="text-center mb-6 relative z-10">
-            <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-gold-leaf to-gold-leaf-dark rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110 hover:rotate-12 border-4 border-white">
-              <svg className="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 className="text-3xl sm:text-4xl font-script font-bold text-gold-leaf-dark mb-3">
-              Gallery
-            </h3>
-            <p className="text-lg sm:text-xl text-slate-grey-dark font-light mb-6">
-              Beautiful photos with fun facts
-            </p>
-          </div>
-          <button
-            onClick={() => onNavigate('gallery')}
-            className="w-full bg-gradient-to-r from-gold-leaf to-gold-leaf-dark text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10"
-          >
-            Explore
-          </button>
-        </div>
       </div>
     </div>
   );

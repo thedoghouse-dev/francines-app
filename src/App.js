@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ReactGA from 'react-ga4';
 import Dashboard from './components/Dashboard';
 import WordSearch from './components/WordSearch';
-import SchnauzzerGallery from './components/SchnauzzerGallery';
 import MemoryMatch from './components/MemoryMatch';
 import Solitaire from './components/Solitaire';
 
@@ -21,7 +20,6 @@ function App() {
     const pageMap = {
       dashboard: { page: '/dashboard', title: 'Dashboard' },
       wordSearch: { page: '/word-search', title: 'Word Search' },
-      gallery: { page: '/gallery', title: 'Schnauzer Gallery' },
       memoryMatch: { page: '/memory-match', title: 'Memory Match' },
       solitaire: { page: '/solitaire', title: 'Solitaire' }
     };
@@ -38,8 +36,6 @@ function App() {
         return <Dashboard onNavigate={setCurrentView} />;
       case 'wordSearch':
         return <WordSearch onExit={() => setCurrentView('dashboard')} />;
-      case 'gallery':
-        return <SchnauzzerGallery onExit={() => setCurrentView('dashboard')} />;
       case 'memoryMatch':
         return <MemoryMatch onExit={() => setCurrentView('dashboard')} />;
       case 'solitaire':
