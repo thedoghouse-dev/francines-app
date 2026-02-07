@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#2C6B6B" rx="80"/>
+
+  <!-- Letter F -->
+  <text x="256" y="360" font-family="Inter, Arial, sans-serif" font-size="320" font-weight="bold" fill="#F5F1E8" text-anchor="middle">F</text>
+
+  <!-- Decorative elements -->
+  <circle cx="128" cy="128" r="24" fill="#C5A028" opacity="0.8"/>
+  <circle cx="384" cy="128" r="24" fill="#C5A028" opacity="0.8"/>
+  <circle cx="128" cy="384" r="24" fill="#C5A028" opacity="0.8"/>
+  <circle cx="384" cy="384" r="24" fill="#C5A028" opacity="0.8"/>
+</svg>

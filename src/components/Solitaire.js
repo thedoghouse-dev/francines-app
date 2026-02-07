@@ -268,13 +268,13 @@ const Solitaire = ({ onExit }) => {
       onClick={onClick}
       className={`
         relative w-14 h-20 sm:w-16 sm:h-24 md:w-20 md:h-28 rounded-lg border-2
-        transition-all duration-200 cursor-pointer
+        transition-all duration-300 cursor-pointer transform
         ${card.faceUp
-          ? 'bg-white border-slate-grey shadow-lg hover:shadow-xl active:scale-95'
-          : 'bg-gradient-to-br from-spa-teal to-spa-teal-dark border-spa-teal-dark'
+          ? 'bg-gradient-to-br from-white to-slate-50 border-slate-grey shadow-lg hover:shadow-xl hover:scale-105 active:scale-95'
+          : 'bg-gradient-to-br from-spa-teal via-spa-teal-dark to-spa-teal-dark border-spa-teal-dark shadow-md hover:shadow-lg'
         }
-        ${isSelected ? 'ring-2 sm:ring-4 ring-gold-leaf scale-105' : ''}
-        ${isHinted ? 'ring-2 sm:ring-4 ring-green-500 animate-pulse' : ''}
+        ${isSelected ? 'ring-2 sm:ring-4 ring-gold-leaf scale-110 shadow-2xl' : ''}
+        ${isHinted ? 'ring-2 sm:ring-4 ring-green-500 animate-pulse scale-105' : ''}
       `}
     >
       {card.faceUp ? (
@@ -297,14 +297,14 @@ const Solitaire = ({ onExit }) => {
   const EmptySlot = ({ onClick, label }) => (
     <div
       onClick={onClick}
-      className="w-14 h-20 sm:w-16 sm:h-24 md:w-20 md:h-28 rounded-lg border-2 border-dashed border-slate-grey-light bg-warm-cream-dark/50 flex items-center justify-center cursor-pointer hover:border-slate-grey transition-all"
+      className="w-14 h-20 sm:w-16 sm:h-24 md:w-20 md:h-28 rounded-lg border-2 border-dashed border-slate-grey-light bg-warm-cream-dark/50 flex items-center justify-center cursor-pointer hover:border-slate-grey hover:bg-slate-grey-light/30 transition-all duration-300 transform hover:scale-105"
     >
-      <span className="text-slate-grey text-lg sm:text-xl md:text-2xl">{label}</span>
+      <span className="text-slate-grey text-lg sm:text-xl md:text-2xl font-semibold">{label}</span>
     </div>
   );
 
   return (
-    <div className="min-h-screen p-4 sm:p-8">
+    <div className="min-h-screen p-4 sm:p-8 bg-gradient-to-br from-warm-cream via-warm-cream-light to-warm-cream-dark">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl sm:text-4xl font-bold text-spa-teal-dark">Solitaire</h1>
@@ -463,18 +463,39 @@ const Solitaire = ({ onExit }) => {
 
       {/* Win Modal */}
       {gameWon && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fadeIn">
           <div className="card-elegant max-w-2xl mx-4">
-            <div className="gold-box text-center">
-              <p className="text-4xl sm:text-5xl font-bold mb-6">
-                Congratulations!
-              </p>
-              <p className="text-2xl sm:text-3xl mb-8">
-                You won in <span className="font-bold">{moves}</span> moves!
-              </p>
-              <button onClick={initializeGame} className="btn-primary text-xl sm:text-2xl">
-                PLAY AGAIN
-              </button>
+            <div className="gold-box text-center relative overflow-hidden">
+              {/* Celebration particles */}
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-3 h-3 bg-gold-leaf rounded-full animate-float"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 2}s`,
+                      animationDuration: `${2 + Math.random() * 2}s`
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="relative z-10">
+                <p className="text-5xl sm:text-6xl font-bold mb-6 animate-bounce">
+                  🎉 Congratulations! 🎉
+                </p>
+                <p className="text-2xl sm:text-3xl mb-4">
+                  You won in <span className="font-bold text-4xl">{moves}</span> moves!
+                </p>
+                <p className="text-xl sm:text-2xl mb-8 text-charcoal/80">
+                  Draw mode: <span className="font-bold">{drawCount === 1 ? 'Easy (1 card)' : 'Hard (3 cards)'}</span>
+                </p>
+                <button onClick={initializeGame} className="btn-primary text-xl sm:text-2xl">
+                  PLAY AGAIN
+                </button>
+              </div>
             </div>
           </div>
         </div>

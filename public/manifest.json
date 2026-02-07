@@ -1,0 +1,18 @@
+{
+  "short_name": "Francine's App",
+  "name": "Francine's Digital Activities",
+  "description": "Premium digital activity suite designed for cognitive wellness",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2C6B6B",
+  "background_color": "#F5F1E8",
+  "orientation": "any"
+}

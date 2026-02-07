@@ -51,7 +51,7 @@ const SchnauzzerGallery = ({ onExit }) => {
   };
 
   return (
-    <div className="min-h-screen p-6 sm:p-12">
+    <div className="min-h-screen p-6 sm:p-12 bg-gradient-to-br from-warm-cream via-warm-cream-light to-warm-cream-dark">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl sm:text-5xl font-bold text-spa-teal-dark">
@@ -64,7 +64,7 @@ const SchnauzzerGallery = ({ onExit }) => {
 
       <div className="max-w-5xl mx-auto">
         {/* Image Display Area */}
-        <div className="card-elegant mb-8">
+        <div className="card-elegant mb-8 bg-gradient-to-br from-white to-slate-50 shadow-2xl transition-all duration-300">
           {/* Schnauzer Photo */}
           <div className="relative w-full aspect-[4/3] rounded-xl mb-6 overflow-hidden bg-slate-grey-light/20">
             <img

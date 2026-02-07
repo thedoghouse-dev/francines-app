@@ -31,9 +31,26 @@ module.exports = {
           DEFAULT: '#C5A028',
           dark: '#9B7E1F',
         },
+        'rose': {
+          light: '#FDE8EC',
+          DEFAULT: '#F9A8C0',
+          dark: '#E75B8D',
+        },
+        'lavender': {
+          light: '#F3E8FF',
+          DEFAULT: '#D8B4FE',
+          dark: '#A855F7',
+        },
+        'peach': {
+          light: '#FFF0E6',
+          DEFAULT: '#FFD4B8',
+          dark: '#FF9A76',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'Roboto', 'system-ui', 'sans-serif'],
+        sans: ['Quicksand', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'],
+        script: ['Dancing Script', 'cursive'],
       },
     },
   },
