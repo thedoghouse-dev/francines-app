@@ -127,6 +127,16 @@ const Dashboard = ({ onNavigate }) => {
         </div>
 
       </div>
+
+      {/* About link - subtle in bottom right corner */}
+      <div className="fixed bottom-6 right-6 z-20">
+        <button
+          onClick={() => onNavigate('about')}
+          className="text-slate-grey-dark hover:text-rose-dark transition-colors duration-300 text-sm font-light underline decoration-dotted"
+        >
+          About
+        </button>
+      </div>
     </div>
   );
 };

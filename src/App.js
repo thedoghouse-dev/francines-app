@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import WordSearch from './components/WordSearch';
 import MemoryMatch from './components/MemoryMatch';
 import Solitaire from './components/Solitaire';
+import About from './components/About';
 
 function App() {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -21,7 +22,8 @@ function App() {
       dashboard: { page: '/dashboard', title: 'Dashboard' },
       wordSearch: { page: '/word-search', title: 'Word Search' },
       memoryMatch: { page: '/memory-match', title: 'Memory Match' },
-      solitaire: { page: '/solitaire', title: 'Solitaire' }
+      solitaire: { page: '/solitaire', title: 'Solitaire' },
+      about: { page: '/about', title: 'About' }
     };
 
     const pageData = pageMap[currentView];
@@ -40,6 +42,8 @@ function App() {
         return <MemoryMatch onExit={() => setCurrentView('dashboard')} />;
       case 'solitaire':
         return <Solitaire onExit={() => setCurrentView('dashboard')} />;
+      case 'about':
+        return <About onNavigate={setCurrentView} />;
       default:
         return <Dashboard onNavigate={setCurrentView} />;
     }
