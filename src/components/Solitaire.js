@@ -11,7 +11,6 @@ const Solitaire = () => {
   const [moves, setMoves] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [history, setHistory] = useState([]);
-  const [showHint, setShowHint] = useState(null);
   const [drawCount, setDrawCount] = useState(1); // 1 or 3
 
   const suits = ['♠', '♥', '♦', '♣'];
@@ -71,7 +70,6 @@ const Solitaire = () => {
     setMoves(0);
     setGameWon(false);
     setHistory([]);
-    setShowHint(null);
   };
 
   const saveState = () => {
@@ -132,8 +130,6 @@ const Solitaire = () => {
   };
 
   const handleCardClick = (card, source, sourceIndex, cardIndex) => {
-    setShowHint(null);
-
     if (selectedCard) {
       // Try to move selected card
       const { card: selCard, source: selSource, sourceIndex: selSourceIndex, cardIndex: selCardIndex } = selectedCard;
@@ -192,61 +188,6 @@ const Solitaire = () => {
     setMoves(moves + 1);
   };
 
-  const getHint = () => {
-    // Check waste to foundation
-    if (waste.length > 0) {
-      const topWaste = waste[0];
-      for (let i = 0; i < 4; i++) {
-        if (canPlaceOnFoundation(topWaste, i)) {
-          setShowHint({ type: 'waste-to-foundation', card: topWaste, foundationIndex: i });
-          return;
-        }
-      }
-      // Check waste to tableau
-      for (let i = 0; i < 7; i++) {
-        if (canPlaceOnTableau(topWaste, i)) {
-          setShowHint({ type: 'waste-to-tableau', card: topWaste, tableauIndex: i });
-          return;
-        }
-      }
-    }
-
-    // Check tableau to foundation
-    for (let col = 0; col < 7; col++) {
-      const column = tableau[col];
-      if (column.length > 0) {
-        const topCard = column[column.length - 1];
-        if (topCard.faceUp) {
-          for (let f = 0; f < 4; f++) {
-            if (canPlaceOnFoundation(topCard, f)) {
-              setShowHint({ type: 'tableau-to-foundation', tableauIndex: col, foundationIndex: f });
-              return;
-            }
-          }
-        }
-      }
-    }
-
-    // Check tableau to tableau
-    for (let fromCol = 0; fromCol < 7; fromCol++) {
-      const column = tableau[fromCol];
-      for (let cardIdx = 0; cardIdx < column.length; cardIdx++) {
-        const card = column[cardIdx];
-        if (card.faceUp) {
-          for (let toCol = 0; toCol < 7; toCol++) {
-            if (fromCol !== toCol && canPlaceOnTableau(card, toCol)) {
-              setShowHint({ type: 'tableau-to-tableau', fromCol, toCol, cardIdx });
-              return;
-            }
-          }
-        }
-      }
-    }
-
-    setShowHint({ type: 'none' });
-    setTimeout(() => setShowHint(null), 2000);
-  };
-
   const checkWin = () => {
     const allCardsInFoundation = foundations.every(f => f.length === 13);
     if (allCardsInFoundation && !gameWon) {
@@ -265,7 +206,7 @@ const Solitaire = () => {
   //   return false;
   // };
 
-  const Card = ({ card, onClick, isSelected, isHinted }) => (
+  const Card = ({ card, onClick, isSelected }) => (
     <div
       onClick={onClick}
       className={`
@@ -276,7 +217,6 @@ const Solitaire = () => {
           : 'bg-gradient-to-br from-spa-teal via-spa-teal-dark to-spa-teal-dark border-spa-teal-dark shadow-md hover:shadow-lg'
         }
         ${isSelected ? 'ring-2 sm:ring-4 ring-gold-leaf scale-110 shadow-2xl' : ''}
-        ${isHinted ? 'ring-2 sm:ring-4 ring-green-500 animate-pulse scale-105' : ''}
       `}
     >
       {card.faceUp ? (
@@ -309,18 +249,18 @@ const Solitaire = () => {
     <>
       <Helmet>
         <title>Klondike Solitaire - Classic Card Game | Francine's App</title>
-        <meta name="description" content="Classic Klondike Solitaire with helpful hints and adjustable difficulty. Large cards, clear visuals." />
+        <meta name="description" content="Classic Klondike Solitaire with adjustable difficulty. Large cards, clear visuals, and easy-to-use interface." />
 
         {/* Open Graph */}
         <meta property="og:title" content="Klondike Solitaire - Classic Card Game | Francine's App" />
-        <meta property="og:description" content="Classic Klondike Solitaire with helpful hints and adjustable difficulty. Large cards, clear visuals." />
+        <meta property="og:description" content="Classic Klondike Solitaire with adjustable difficulty. Large cards, clear visuals, and easy-to-use interface." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://francinesapp.com/solitaire" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Klondike Solitaire - Classic Card Game | Francine's App" />
-        <meta name="twitter:description" content="Classic Klondike Solitaire with helpful hints and adjustable difficulty. Large cards, clear visuals." />
+        <meta name="twitter:description" content="Classic Klondike Solitaire with adjustable difficulty. Large cards, clear visuals, and easy-to-use interface." />
       </Helmet>
 
       <div className="min-h-screen p-4 sm:p-8 bg-gradient-to-br from-warm-cream via-warm-cream-light to-warm-cream-dark">
@@ -367,20 +307,11 @@ const Solitaire = () => {
             <button onClick={undo} disabled={history.length === 0} className="btn-secondary text-lg sm:text-xl py-2 px-6 disabled:opacity-50">
               UNDO
             </button>
-            <button onClick={getHint} className="btn-primary text-lg sm:text-xl py-2 px-6">
-              HINT
-            </button>
             <button onClick={initializeGame} className="btn-primary text-lg sm:text-xl py-2 px-6">
               NEW GAME
             </button>
           </div>
         </div>
-
-        {showHint && showHint.type === 'none' && (
-          <div className="mt-4 p-4 bg-slate-grey-light/30 rounded-xl text-center">
-            <p className="text-xl sm:text-2xl text-charcoal">No obvious moves available. Try drawing a card!</p>
-          </div>
-        )}
       </div>
 
       {/* Game Board */}
@@ -415,7 +346,6 @@ const Solitaire = () => {
                           : null
                         }
                         isSelected={selectedCard?.source === 'waste' && index === waste.slice(0, Math.min(3, waste.length)).length - 1}
-                        isHinted={showHint?.type?.includes('waste') && showHint?.card?.id === waste[0].id && index === waste.slice(0, Math.min(3, waste.length)).length - 1}
                       />
                     </div>
                   ))}
@@ -437,7 +367,6 @@ const Solitaire = () => {
                   <Card
                     card={foundation[foundation.length - 1]}
                     onClick={() => {}}
-                    isHinted={showHint?.foundationIndex === index}
                   />
                 ) : (
                   <EmptySlot onClick={() => {}} label={suits[index]} />
@@ -467,10 +396,6 @@ const Solitaire = () => {
                       card={card}
                       onClick={() => handleCardClick(card, 'tableau', colIndex, cardIndex)}
                       isSelected={selectedCard?.source === 'tableau' && selectedCard?.sourceIndex === colIndex && selectedCard?.cardIndex === cardIndex}
-                      isHinted={
-                        (showHint?.type === 'tableau-to-foundation' && showHint?.tableauIndex === colIndex && cardIndex === column.length - 1) ||
-                        (showHint?.type === 'tableau-to-tableau' && showHint?.fromCol === colIndex && showHint?.cardIdx === cardIndex)
-                      }
                     />
                   </div>
                 ))
