@@ -1,8 +1,27 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
-const About = ({ onNavigate }) => {
+const About = () => {
   return (
-    <div className="min-h-screen p-6 sm:p-12 bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light">
+    <>
+      <Helmet>
+        <title>About Francine's App - Thoughtfully Designed Senior Activities</title>
+        <meta name="description" content="Learn about Francine's App, a digital activity suite designed with accessibility, comfort, and cognitive wellness in mind." />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="About Francine's App - Thoughtfully Designed Senior Activities" />
+        <meta property="og:description" content="Learn about Francine's App, a digital activity suite designed with accessibility, comfort, and cognitive wellness in mind." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://francinesapp.com/about" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Francine's App - Thoughtfully Designed Senior Activities" />
+        <meta name="twitter:description" content="Learn about Francine's App, a digital activity suite designed with accessibility, comfort, and cognitive wellness in mind." />
+      </Helmet>
+
+      <div className="min-h-screen p-6 sm:p-12 bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
         <div className="absolute top-20 left-10 text-6xl text-rose">❀</div>
@@ -90,15 +109,16 @@ const About = ({ onNavigate }) => {
 
         {/* Back Button */}
         <div className="text-center">
-          <button
-            onClick={() => onNavigate('dashboard')}
-            className="bg-gradient-to-r from-rose via-lavender to-peach text-white font-semibold py-4 px-12 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 text-xl active:scale-95 hover:scale-105 transform"
+          <Link
+            to="/"
+            className="bg-gradient-to-r from-rose via-lavender to-peach text-white font-semibold py-4 px-12 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 text-xl active:scale-95 hover:scale-105 transform inline-block"
           >
             Back to Activities
-          </button>
+          </Link>
         </div>
       </div>
     </div>
+    </>
   );
 };
 

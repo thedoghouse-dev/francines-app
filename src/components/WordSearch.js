@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
-const WordSearch = ({ onExit }) => {
+const WordSearch = () => {
   const [grid, setGrid] = useState([]);
   const [words, setWords] = useState([]);
   const [foundWords, setFoundWords] = useState([]);
@@ -191,7 +193,24 @@ const WordSearch = ({ onExit }) => {
   const allWordsFound = foundWords.length === words.length;
 
   return (
-    <div className="h-screen flex flex-col p-4 sm:p-6 bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light relative">
+    <>
+      <Helmet>
+        <title>Word Search Puzzle - Find Hidden Words | Francine's App</title>
+        <meta name="description" content="Find hidden words in beautifully designed grids. Three difficulty levels from 6x6 to 10x10." />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="Word Search Puzzle - Find Hidden Words | Francine's App" />
+        <meta property="og:description" content="Find hidden words in beautifully designed grids. Three difficulty levels from 6x6 to 10x10." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://francinesapp.com/word-search" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Word Search Puzzle - Find Hidden Words | Francine's App" />
+        <meta name="twitter:description" content="Find hidden words in beautifully designed grids. Three difficulty levels from 6x6 to 10x10." />
+      </Helmet>
+
+      <div className="h-screen flex flex-col p-4 sm:p-6 bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light relative">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-5">
         <div className="absolute top-10 left-10 text-4xl text-rose">❀</div>
@@ -205,9 +224,9 @@ const WordSearch = ({ onExit }) => {
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-lavender-dark to-rose-dark">
           Word Search
         </h1>
-        <button onClick={onExit} className="bg-gradient-to-r from-slate-grey to-slate-grey-dark text-white font-semibold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg active:scale-95">
+        <Link to="/" className="bg-gradient-to-r from-slate-grey to-slate-grey-dark text-white font-semibold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-base sm:text-lg active:scale-95 block text-center">
           Home
-        </button>
+        </Link>
       </div>
 
       <div className="flex-1 flex flex-col max-w-6xl mx-auto w-full overflow-y-auto relative z-10">
@@ -403,6 +422,7 @@ const WordSearch = ({ onExit }) => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

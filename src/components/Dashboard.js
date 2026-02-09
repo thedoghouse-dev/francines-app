@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
-const Dashboard = ({ onNavigate }) => {
+const Dashboard = () => {
   // Get formatted date for display
   const getFormattedDate = () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -10,7 +12,24 @@ const Dashboard = ({ onNavigate }) => {
   const formattedDate = getFormattedDate();
 
   return (
-    <div className="min-h-screen p-6 sm:p-12 bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light">
+    <>
+      <Helmet>
+        <title>Francine's App - Memory Games & Activities for Cognitive Wellness</title>
+        <meta name="description" content="Premium digital activity suite featuring Memory Match, Word Search, and Solitaire. Designed with love for seniors and cognitive wellness." />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="Francine's App - Memory Games & Activities for Cognitive Wellness" />
+        <meta property="og:description" content="Premium digital activity suite featuring Memory Match, Word Search, and Solitaire. Designed with love for seniors and cognitive wellness." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://francinesapp.com/" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Francine's App - Memory Games & Activities for Cognitive Wellness" />
+        <meta name="twitter:description" content="Premium digital activity suite featuring Memory Match, Word Search, and Solitaire. Designed with love for seniors and cognitive wellness." />
+      </Helmet>
+
+      <div className="min-h-screen p-6 sm:p-12 bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
         <div className="absolute top-20 left-10 text-6xl text-rose">❀</div>
@@ -60,12 +79,12 @@ const Dashboard = ({ onNavigate }) => {
               Classic card game with hints
             </p>
           </div>
-          <button
-            onClick={() => onNavigate('solitaire')}
-            className="w-full bg-gradient-to-r from-peach to-peach-dark text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10"
+          <Link
+            to="/solitaire"
+            className="w-full bg-gradient-to-r from-peach to-peach-dark text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10 block text-center"
           >
             Play
-          </button>
+          </Link>
         </div>
 
         {/* Word Search Card */}
@@ -89,12 +108,12 @@ const Dashboard = ({ onNavigate }) => {
               Find hidden words in the grid
             </p>
           </div>
-          <button
-            onClick={() => onNavigate('wordSearch')}
-            className="w-full bg-gradient-to-r from-lavender to-lavender-dark text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10"
+          <Link
+            to="/word-search"
+            className="w-full bg-gradient-to-r from-lavender to-lavender-dark text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10 block text-center"
           >
             Start
-          </button>
+          </Link>
         </div>
 
         {/* Memory Match Card */}
@@ -118,26 +137,27 @@ const Dashboard = ({ onNavigate }) => {
               Match pairs to win
             </p>
           </div>
-          <button
-            onClick={() => onNavigate('memoryMatch')}
-            className="w-full bg-gradient-to-r from-rose to-rose-dark text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10"
+          <Link
+            to="/memory-match"
+            className="w-full bg-gradient-to-r from-rose to-rose-dark text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10 block text-center"
           >
             Play
-          </button>
+          </Link>
         </div>
 
       </div>
 
       {/* About link - subtle in bottom right corner */}
       <div className="fixed bottom-6 right-6 z-20">
-        <button
-          onClick={() => onNavigate('about')}
+        <Link
+          to="/about"
           className="text-slate-grey-dark hover:text-rose-dark transition-colors duration-300 text-sm font-light underline decoration-dotted"
         >
           About
-        </button>
+        </Link>
       </div>
     </div>
+    </>
   );
 };
 

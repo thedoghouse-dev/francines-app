@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
-const Solitaire = ({ onExit }) => {
+const Solitaire = () => {
   const [deck, setDeck] = useState([]);
   const [waste, setWaste] = useState([]);
   const [foundations, setFoundations] = useState([[], [], [], []]);
@@ -304,13 +306,30 @@ const Solitaire = ({ onExit }) => {
   );
 
   return (
-    <div className="min-h-screen p-4 sm:p-8 bg-gradient-to-br from-warm-cream via-warm-cream-light to-warm-cream-dark">
+    <>
+      <Helmet>
+        <title>Klondike Solitaire - Classic Card Game | Francine's App</title>
+        <meta name="description" content="Classic Klondike Solitaire with helpful hints and adjustable difficulty. Large cards, clear visuals." />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="Klondike Solitaire - Classic Card Game | Francine's App" />
+        <meta property="og:description" content="Classic Klondike Solitaire with helpful hints and adjustable difficulty. Large cards, clear visuals." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://francinesapp.com/solitaire" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Klondike Solitaire - Classic Card Game | Francine's App" />
+        <meta name="twitter:description" content="Classic Klondike Solitaire with helpful hints and adjustable difficulty. Large cards, clear visuals." />
+      </Helmet>
+
+      <div className="min-h-screen p-4 sm:p-8 bg-gradient-to-br from-warm-cream via-warm-cream-light to-warm-cream-dark">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl sm:text-4xl font-bold text-spa-teal-dark">Solitaire</h1>
-        <button onClick={onExit} className="btn-secondary text-lg sm:text-xl py-2 px-6">
+        <Link to="/" className="btn-secondary text-lg sm:text-xl py-2 px-6 block text-center">
           HOME
-        </button>
+        </Link>
       </div>
 
       {/* Stats and Controls */}
@@ -501,6 +520,7 @@ const Solitaire = ({ onExit }) => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
