@@ -135,6 +135,20 @@ function hasAvailableMatch(tiles) {
   return false;
 }
 
+// True if two non-removed tiles share the same (col, row) AND typeId.
+// Such tiles can never be matched: the lower is blocked by the upper, yet they
+// are each other's only partner — an unwinnable deadlock.
+function hasStackingConflict(tiles) {
+  const active = tiles.filter(t => !t.removed);
+  for (let i = 0; i < active.length; i++)
+    for (let j = i + 1; j < active.length; j++)
+      if (active[i].col === active[j].col &&
+          active[i].row === active[j].row &&
+          active[i].typeId === active[j].typeId)
+        return true;
+  return false;
+}
+
 function fisherYates(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -147,11 +161,15 @@ function fisherYates(arr) {
 function createTiles(positions) {
   const pairCount = positions.length / 2;
   const subset = TILE_TYPES.slice(0, pairCount);
-  const types = fisherYates([...subset, ...subset]);
-  return positions.map((pos, idx) => ({
-    id: idx, col: pos.col, row: pos.row, layer: pos.layer,
-    typeId: types[idx].id, sym: types[idx].sym, removed: false,
-  }));
+  let tiles;
+  do {
+    const types = fisherYates([...subset, ...subset]);
+    tiles = positions.map((pos, idx) => ({
+      id: idx, col: pos.col, row: pos.row, layer: pos.layer,
+      typeId: types[idx].id, sym: types[idx].sym, removed: false,
+    }));
+  } while (hasStackingConflict(tiles));
+  return tiles;
 }
 
 function formatTime(s) {
@@ -280,11 +298,15 @@ const MahjonggSolitaire = () => {
         return { ...t, typeId: types[idx].typeId, sym: types[idx].sym };
       });
       attempts++;
-    } while (!hasAvailableMatch(newTiles) && attempts < 50);
-    setTiles(newTiles);
-    setSelected(null);
-    setHintIds([]);
-    setIsStuck(false);
+    } while ((!hasAvailableMatch(newTiles) || hasStackingConflict(newTiles)) && attempts < 50);
+    // Only apply the shuffle if a valid arrangement was found
+    if (hasAvailableMatch(newTiles) && !hasStackingConflict(newTiles)) {
+      setTiles(newTiles);
+      setSelected(null);
+      setHintIds([]);
+      setIsStuck(false);
+    }
+    // If all 50 attempts failed, leave isStuck=true so the modal stays visible
   };
 
   const remainingCount = tiles.filter(t => !t.removed).length;
