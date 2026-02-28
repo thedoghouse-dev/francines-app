@@ -288,7 +288,6 @@ const MahjonggSolitaire = () => {
   };
 
   const remainingCount = tiles.filter(t => !t.removed).length;
-  const matchedCount   = tiles.length - remainingCount;
 
   const difficultyLabel = difficulty
     ? difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
