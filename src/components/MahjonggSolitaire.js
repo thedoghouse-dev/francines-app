@@ -4,11 +4,11 @@ import { Helmet } from 'react-helmet-async';
 
 const TILE_SIZE = 90;
 const TILE_STEP = TILE_SIZE + 4; // 94px per tile
-const DEPTH_X = 3;  // shift right per layer (depth illusion)
-const DEPTH_Y = 3;  // shift up per layer (depth illusion)
+const DEPTH_X = 3;
+const DEPTH_Y = 3;
 const PADDING = 15;
 
-// 36 unique tile symbols — 2 of each = 72 tiles total
+// 36 unique tile symbols — first 18 used for Easy, all 36 for Medium/Hard
 const TILE_TYPES = [
   { id: 0,  sym: '🌸' }, { id: 1,  sym: '🌺' }, { id: 2,  sym: '🌻' },
   { id: 3,  sym: '🌹' }, { id: 4,  sym: '🌷' }, { id: 5,  sym: '🌼' },
@@ -24,50 +24,102 @@ const TILE_TYPES = [
   { id: 33, sym: '🐢' }, { id: 34, sym: '🐬' }, { id: 35, sym: '🐦' },
 ];
 
-// Board layout: 3 layers, 72 tile positions total
-// Layer 0: cols 0-4, rows 0-7 → 40 tiles  (5 wide × 8 tall)
-// Layer 1: cols 1-3, rows 0-7 → 24 tiles  (3 wide × 8 tall, centered)
-// Layer 2: cols 1-2, rows 2-5 →  8 tiles  (2 wide × 4 tall, centered)
-const BOARD_LAYOUT = (() => {
-  const pos = [];
-  for (let r = 0; r < 8; r++)
-    for (let c = 0; c < 5; c++)
-      pos.push({ col: c, row: r, layer: 0 });
-  for (let r = 0; r < 8; r++)
-    for (let c = 1; c < 4; c++)
-      pos.push({ col: c, row: r, layer: 1 });
-  for (let r = 2; r < 6; r++)
-    for (let c = 1; c < 3; c++)
-      pos.push({ col: c, row: r, layer: 2 });
-  return pos; // 40 + 24 + 8 = 72
+// ── Easy layouts: 36 tiles, 3 layers ──────────────────────────────────────
+// Wide: 6 cols × 3 rows base  |  Tall: 4 cols × 5 rows base
+const LAYOUT_EASY_WIDE = (() => {
+  const p = [];
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 6; c++) p.push({ col: c, row: r, layer: 0 });
+  for (let r = 0; r < 3; r++) for (let c = 1; c < 5; c++) p.push({ col: c, row: r, layer: 1 });
+  for (let r = 0; r < 3; r++) for (let c = 2; c < 4; c++) p.push({ col: c, row: r, layer: 2 });
+  return p; // 18 + 12 + 6 = 36
+})();
+const LAYOUT_EASY_TALL = (() => {
+  const p = [];
+  for (let r = 0; r < 5; r++) for (let c = 0; c < 4; c++) p.push({ col: c, row: r, layer: 0 });
+  for (let r = 0; r < 5; r++) for (let c = 1; c < 3; c++) p.push({ col: c, row: r, layer: 1 });
+  for (let r = 1; r < 4; r++) for (let c = 1; c < 3; c++) p.push({ col: c, row: r, layer: 2 });
+  return p; // 20 + 10 + 6 = 36
 })();
 
-const BOARD_W = 5 * TILE_STEP + DEPTH_X * 2 + PADDING * 2;
-const BOARD_H = 8 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2;
+// ── Medium layouts: 72 tiles, 3 layers ────────────────────────────────────
+// Wide: 8 cols × 5 rows base  |  Tall: 5 cols × 8 rows base
+const LAYOUT_MED_WIDE = (() => {
+  const p = [];
+  for (let r = 0; r < 5; r++) for (let c = 0; c < 8; c++) p.push({ col: c, row: r, layer: 0 });
+  for (let r = 0; r < 4; r++) for (let c = 1; c < 7; c++) p.push({ col: c, row: r, layer: 1 });
+  for (let r = 1; r < 3; r++) for (let c = 2; c < 6; c++) p.push({ col: c, row: r, layer: 2 });
+  return p; // 40 + 24 + 8 = 72
+})();
+const LAYOUT_MED_TALL = (() => {
+  const p = [];
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 5; c++) p.push({ col: c, row: r, layer: 0 });
+  for (let r = 0; r < 8; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 1 });
+  for (let r = 2; r < 6; r++) for (let c = 1; c < 3; c++) p.push({ col: c, row: r, layer: 2 });
+  return p; // 40 + 24 + 8 = 72
+})();
 
-// --- Pure helper functions ---
+// ── Hard layouts: 72 tiles, 4 layers ──────────────────────────────────────
+// Wide: 8 cols × 4 rows base, with a double-stacked inner core
+// Tall: 5 cols × 8 rows base, narrow inner pyramid
+const LAYOUT_HARD_WIDE = (() => {
+  const p = [];
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 8; c++) p.push({ col: c, row: r, layer: 0 });
+  for (let r = 0; r < 4; r++) for (let c = 1; c < 7; c++) p.push({ col: c, row: r, layer: 1 });
+  for (let r = 1; r < 3; r++) for (let c = 2; c < 6; c++) p.push({ col: c, row: r, layer: 2 });
+  for (let r = 1; r < 3; r++) for (let c = 2; c < 6; c++) p.push({ col: c, row: r, layer: 3 });
+  return p; // 32 + 24 + 8 + 8 = 72
+})();
+const LAYOUT_HARD_TALL = (() => {
+  const p = [];
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 5; c++) p.push({ col: c, row: r, layer: 0 });
+  for (let r = 1; r < 7; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 1 });
+  for (let r = 2; r < 6; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 2 });
+  for (let r = 3; r < 5; r++) for (let c = 2; c < 3; c++) p.push({ col: c, row: r, layer: 3 });
+  return p; // 40 + 18 + 12 + 2 = 72
+})();
+
+// ── Board pixel dimensions per layout ─────────────────────────────────────
+const BOARD_DIMS = {
+  easy: {
+    wide: { w: 6 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 3 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+    tall: { w: 4 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 5 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+  },
+  medium: {
+    wide: { w: 8 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 5 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+    tall: { w: 5 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 8 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+  },
+  hard: {
+    wide: { w: 8 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 4 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+    tall: { w: 5 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 8 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+  },
+};
+
+const LAYOUTS = {
+  easy:   { wide: LAYOUT_EASY_WIDE,  tall: LAYOUT_EASY_TALL  },
+  medium: { wide: LAYOUT_MED_WIDE,   tall: LAYOUT_MED_TALL   },
+  hard:   { wide: LAYOUT_HARD_WIDE,  tall: LAYOUT_HARD_TALL  },
+};
+
+function chooseLayout(difficulty) {
+  const orientation = window.innerWidth >= 640 ? 'wide' : 'tall';
+  return {
+    positions: LAYOUTS[difficulty][orientation],
+    ...BOARD_DIMS[difficulty][orientation],
+  };
+}
+
+// ── Pure helpers ───────────────────────────────────────────────────────────
 
 function isTileFree(tileId, tiles) {
   const tile = tiles.find(t => t.id === tileId);
   if (!tile || tile.removed) return false;
-
-  // Covered from above: any non-removed tile at same col/row, higher layer
   const coveredAbove = tiles.some(t =>
-    !t.removed && t.id !== tileId &&
-    t.layer > tile.layer &&
+    !t.removed && t.id !== tileId && t.layer > tile.layer &&
     t.col === tile.col && t.row === tile.row
   );
   if (coveredAbove) return false;
-
-  // Blocked on both left and right at the same layer
-  const hasLeft = tiles.some(t =>
-    !t.removed && t.layer === tile.layer &&
-    t.col === tile.col - 1 && t.row === tile.row
-  );
-  const hasRight = tiles.some(t =>
-    !t.removed && t.layer === tile.layer &&
-    t.col === tile.col + 1 && t.row === tile.row
-  );
+  const hasLeft  = tiles.some(t => !t.removed && t.layer === tile.layer && t.col === tile.col - 1 && t.row === tile.row);
+  const hasRight = tiles.some(t => !t.removed && t.layer === tile.layer && t.col === tile.col + 1 && t.row === tile.row);
   return !(hasLeft && hasRight);
 }
 
@@ -92,50 +144,47 @@ function fisherYates(arr) {
   return a;
 }
 
-function createTiles() {
-  const types = fisherYates([...TILE_TYPES, ...TILE_TYPES]); // 72 shuffled
-  return BOARD_LAYOUT.map((pos, idx) => ({
-    id: idx,
-    col: pos.col,
-    row: pos.row,
-    layer: pos.layer,
-    typeId: types[idx].id,
-    sym: types[idx].sym,
-    removed: false,
+function createTiles(positions) {
+  const pairCount = positions.length / 2;
+  const subset = TILE_TYPES.slice(0, pairCount);
+  const types = fisherYates([...subset, ...subset]);
+  return positions.map((pos, idx) => ({
+    id: idx, col: pos.col, row: pos.row, layer: pos.layer,
+    typeId: types[idx].id, sym: types[idx].sym, removed: false,
   }));
 }
 
-// --- Component ---
+function formatTime(s) {
+  const m = Math.floor(s / 60).toString().padStart(2, '0');
+  return `${m}:${(s % 60).toString().padStart(2, '0')}`;
+}
+
+// ── Component ──────────────────────────────────────────────────────────────
 
 const MahjonggSolitaire = () => {
+  const [difficulty, setDifficulty] = useState(null); // null = show selection screen
   const [tiles, setTiles] = useState([]);
   const [selected, setSelected] = useState(null);
   const [moves, setMoves] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [isStuck, setIsStuck] = useState(false);
   const [hintIds, setHintIds] = useState([]);
   const [boardScale, setBoardScale] = useState(1);
+
   const boardContainerRef = useRef(null);
+  const layoutRef = useRef(null);
+  const timerRef = useRef(null);
 
-  const initGame = () => {
-    setTiles(createTiles());
-    setSelected(null);
-    setMoves(0);
-    setGameWon(false);
-    setIsStuck(false);
-    setHintIds([]);
-  };
+  // Cleanup timer on unmount
+  useEffect(() => () => clearInterval(timerRef.current), []);
 
-  useEffect(() => {
-    initGame();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  // Scale effect — runs once on mount, updates on resize
   useEffect(() => {
     const updateScale = () => {
-      if (boardContainerRef.current) {
+      if (boardContainerRef.current && layoutRef.current) {
         const available = boardContainerRef.current.offsetWidth;
-        const natural = BOARD_W + 32; // board width + 2×16px inner padding
+        const natural = layoutRef.current.w + 32;
         setBoardScale(Math.min(1, available / natural));
       }
     };
@@ -144,38 +193,66 @@ const MahjonggSolitaire = () => {
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
+  const startTimer = () => {
+    clearInterval(timerRef.current);
+    setElapsed(0);
+    timerRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
+  };
+
+  const stopTimer = () => clearInterval(timerRef.current);
+
+  const initGame = (diff) => {
+    const layout = chooseLayout(diff);
+    layoutRef.current = layout;
+    setTiles(createTiles(layout.positions));
+    setSelected(null);
+    setMoves(0);
+    setGameWon(false);
+    setIsStuck(false);
+    setHintIds([]);
+    startTimer();
+    // Re-run scale now that layoutRef is populated
+    if (boardContainerRef.current) {
+      const available = boardContainerRef.current.offsetWidth;
+      setBoardScale(Math.min(1, available / (layout.w + 32)));
+    }
+  };
+
+  const handleSelectDifficulty = (diff) => {
+    setDifficulty(diff);
+    initGame(diff);
+  };
+
+  const handleChangeDifficulty = () => {
+    stopTimer();
+    setDifficulty(null);
+    setTiles([]);
+  };
+
   const handleTileClick = (tileId) => {
     if (!isTileFree(tileId, tiles)) return;
     setHintIds([]);
 
-    if (selected === null) {
-      setSelected(tileId);
-      return;
-    }
-    if (selected === tileId) {
-      setSelected(null);
-      return;
-    }
+    if (selected === null) { setSelected(tileId); return; }
+    if (selected === tileId) { setSelected(null); return; }
 
     const selTile = tiles.find(t => t.id === selected);
-    const clicked = tiles.find(t => t.id === tileId);
+    const clicked  = tiles.find(t => t.id === tileId);
 
     if (selTile && clicked && selTile.typeId === clicked.typeId) {
-      // Match — remove both tiles
       const newTiles = tiles.map(t =>
         t.id === selected || t.id === tileId ? { ...t, removed: true } : t
       );
       setTiles(newTiles);
       setSelected(null);
       setMoves(m => m + 1);
-
       if (newTiles.every(t => t.removed)) {
+        stopTimer();
         setGameWon(true);
       } else if (!hasAvailableMatch(newTiles)) {
         setIsStuck(true);
       }
     } else {
-      // No match — select the new tile instead
       setSelected(tileId);
     }
   };
@@ -183,21 +260,18 @@ const MahjonggSolitaire = () => {
   const handleHint = () => {
     setSelected(null);
     const free = getFreeTiles(tiles);
-    for (let i = 0; i < free.length; i++) {
-      for (let j = i + 1; j < free.length; j++) {
+    for (let i = 0; i < free.length; i++)
+      for (let j = i + 1; j < free.length; j++)
         if (free[i].typeId === free[j].typeId) {
           setHintIds([free[i].id, free[j].id]);
           return;
         }
-      }
-    }
     setIsStuck(true);
   };
 
   const handleShuffle = () => {
     const remaining = tiles.filter(t => !t.removed);
     if (remaining.length < 2) return;
-
     let newTiles;
     let attempts = 0;
     do {
@@ -209,7 +283,6 @@ const MahjonggSolitaire = () => {
       });
       attempts++;
     } while (!hasAvailableMatch(newTiles) && attempts < 50);
-
     setTiles(newTiles);
     setSelected(null);
     setHintIds([]);
@@ -217,20 +290,24 @@ const MahjonggSolitaire = () => {
   };
 
   const remainingCount = tiles.filter(t => !t.removed).length;
-  const matchedCount = tiles.length - remainingCount;
+  const matchedCount   = tiles.length - remainingCount;
+
+  const difficultyLabel = difficulty
+    ? difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
+    : '';
 
   return (
     <>
       <Helmet>
         <title>Mahjongg Solitaire - Tile Matching Game | Francine's App</title>
-        <meta name="description" content="Match pairs of tiles in this classic Mahjongg Solitaire game. Remove all 72 tiles to win!" />
+        <meta name="description" content="Match pairs of tiles in this classic Mahjongg Solitaire game. Choose Easy, Medium, or Hard!" />
         <meta property="og:title" content="Mahjongg Solitaire - Tile Matching Game | Francine's App" />
-        <meta property="og:description" content="Match pairs of tiles in this classic Mahjongg Solitaire game. Remove all 72 tiles to win!" />
+        <meta property="og:description" content="Match pairs of tiles in this classic Mahjongg Solitaire game. Choose Easy, Medium, or Hard!" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://francinesapp.com/mahjongg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Mahjongg Solitaire - Tile Matching Game | Francine's App" />
-        <meta name="twitter:description" content="Match pairs of tiles in this classic Mahjongg Solitaire game. Remove all 72 tiles to win!" />
+        <meta name="twitter:description" content="Match pairs of tiles in this classic Mahjongg Solitaire game. Choose Easy, Medium, or Hard!" />
       </Helmet>
 
       <div className="min-h-screen p-4 sm:p-6 bg-gradient-to-br from-spa-teal-light via-warm-cream-light to-lavender-light relative">
@@ -255,200 +332,256 @@ const MahjonggSolitaire = () => {
           </Link>
         </div>
 
-        {/* Stats & Controls */}
-        <div className="card-elegant mb-4 relative z-10">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex gap-6">
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold text-spa-teal-dark">{moves}</div>
-                <div className="text-sm text-slate-grey">Moves</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold text-spa-teal-dark">{remainingCount}</div>
-                <div className="text-sm text-slate-grey">Remaining</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl sm:text-2xl font-bold text-spa-teal-dark">{matchedCount}</div>
-                <div className="text-sm text-slate-grey">Matched</div>
+        {/* ── Difficulty Selection Screen ── */}
+        {!difficulty && (
+          <div className="card-elegant max-w-2xl mx-auto relative z-10">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl sm:text-4xl font-script font-bold text-transparent bg-clip-text bg-gradient-to-r from-spa-teal-dark to-lavender-dark mb-2">
+                Choose Your Challenge
+              </h2>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="text-2xl text-spa-teal">✿</span>
+                <p className="text-xl sm:text-2xl text-slate-grey-dark font-light">Select a difficulty to begin</p>
+                <span className="text-2xl text-lavender">✿</span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <button
-                onClick={handleHint}
-                className="bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2 px-4 rounded-xl shadow hover:shadow-md transition-all duration-300 text-base sm:text-lg active:scale-95"
+                onClick={() => handleSelectDifficulty('easy')}
+                className="bg-green-50 p-6 rounded-xl border-2 border-green-200 hover:border-green-400 hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 text-left"
               >
-                Hint
+                <h3 className="text-2xl font-bold text-green-700 mb-2">Easy</h3>
+                <p className="text-lg text-green-600 font-semibold">36 tiles • 3 layers</p>
+                <p className="text-md text-slate-grey mt-2">A gentle introduction</p>
               </button>
               <button
-                onClick={handleShuffle}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold py-2 px-4 rounded-xl shadow hover:shadow-md transition-all duration-300 text-base sm:text-lg active:scale-95"
+                onClick={() => handleSelectDifficulty('medium')}
+                className="bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 text-left"
               >
-                Shuffle
+                <h3 className="text-2xl font-bold text-yellow-700 mb-2">Medium</h3>
+                <p className="text-lg text-yellow-600 font-semibold">72 tiles • 3 layers</p>
+                <p className="text-md text-slate-grey mt-2">The classic challenge</p>
               </button>
               <button
-                onClick={initGame}
-                className="bg-gradient-to-r from-spa-teal to-spa-teal-dark text-white font-semibold py-2 px-4 rounded-xl shadow hover:shadow-md transition-all duration-300 text-base sm:text-lg active:scale-95"
+                onClick={() => handleSelectDifficulty('hard')}
+                className="bg-red-50 p-6 rounded-xl border-2 border-red-200 hover:border-red-400 hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 text-left"
               >
-                New Game
+                <h3 className="text-2xl font-bold text-red-700 mb-2">Hard</h3>
+                <p className="text-lg text-red-600 font-semibold">72 tiles • 4 layers</p>
+                <p className="text-md text-slate-grey mt-2">For the brave!</p>
               </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Instructions */}
-        <div className="card-elegant mb-4 p-3 text-center relative z-10">
-          <p className="text-lg sm:text-xl text-charcoal">
-            Click two matching tiles to remove them — only <span className="font-bold text-spa-teal-dark">free tiles</span> (bright) can be selected
-          </p>
-        </div>
-
-        {/* Board */}
-        <div ref={boardContainerRef} className="relative z-10">
-          <div className="flex justify-center">
-          <div
-            className="rounded-2xl shadow-2xl bg-gradient-to-br from-spa-teal/10 to-lavender/10 border-2 border-spa-teal/20 overflow-hidden"
-            style={{
-              width: (BOARD_W + 32) * boardScale + 'px',
-              height: (BOARD_H + 32) * boardScale + 'px',
-            }}
-          >
-            <div
-              style={{
-                padding: '16px',
-                width: BOARD_W + 32 + 'px',
-                height: BOARD_H + 32 + 'px',
-                transform: `scale(${boardScale})`,
-                transformOrigin: 'top left',
-              }}
-            >
-            <div style={{ position: 'relative', width: BOARD_W + 'px', height: BOARD_H + 'px' }}>
-              {tiles.map(tile => {
-                if (tile.removed) return null;
-
-                const free = isTileFree(tile.id, tiles);
-                const isSelected = selected === tile.id;
-                const isHint = hintIds.includes(tile.id);
-
-                const x = PADDING + tile.col * TILE_STEP + tile.layer * DEPTH_X;
-                const y = PADDING + tile.row * TILE_STEP - tile.layer * DEPTH_Y;
-                const zIndex = tile.layer * 200 + tile.col + tile.row;
-
-                let bgClass, borderClass, shadowStyle, filterStyle;
-                if (isSelected) {
-                  bgClass = 'bg-gradient-to-br from-gold-leaf-light to-gold-leaf';
-                  borderClass = 'border-gold-leaf-dark';
-                  shadowStyle = '0 0 0 3px #9B7E1F, 2px 4px 10px rgba(0,0,0,0.4)';
-                  filterStyle = 'none';
-                } else if (isHint) {
-                  bgClass = 'bg-gradient-to-br from-green-50 to-green-100';
-                  borderClass = 'border-green-500';
-                  shadowStyle = '0 0 0 3px #22c55e, 2px 4px 10px rgba(0,0,0,0.4)';
-                  filterStyle = 'none';
-                } else if (free) {
-                  bgClass = 'bg-gradient-to-br from-white to-warm-cream';
-                  borderClass = 'border-spa-teal/50 hover:border-spa-teal';
-                  shadowStyle = '2px 3px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.9)';
-                  filterStyle = 'none';
-                } else {
-                  bgClass = 'bg-white';
-                  borderClass = 'border-slate-300';
-                  shadowStyle = '1px 2px 4px rgba(0,0,0,0.15)';
-                  filterStyle = 'grayscale(1) opacity(0.55)';
-                }
-
-                return (
-                  <button
-                    key={tile.id}
-                    onClick={() => handleTileClick(tile.id)}
-                    disabled={!free}
-                    title={free ? `${tile.sym} — click to select` : `${tile.sym} — blocked`}
-                    style={{
-                      position: 'absolute',
-                      left: x + 'px',
-                      top: y + 'px',
-                      width: TILE_SIZE + 'px',
-                      height: TILE_SIZE + 'px',
-                      zIndex,
-                      fontSize: '52px',
-                      lineHeight: '1',
-                      boxShadow: shadowStyle,
-                      filter: filterStyle,
-                    }}
-                    className={`
-                      rounded-lg flex items-center justify-center select-none
-                      transition-all duration-150
-                      ${bgClass} ${borderClass}
-                      ${free ? 'border-4 cursor-pointer hover:scale-105 active:scale-95' : 'border cursor-not-allowed'}
-                      ${isSelected || isHint ? 'scale-105' : ''}
-                    `}
-                  >
-                    {tile.sym}
-                  </button>
-                );
-              })}
-            </div>
-            </div>
-          </div>
-          </div>
-        </div>
-
-        {/* Win Modal */}
-        {gameWon && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn p-4">
-            <div className="card-elegant max-w-lg w-full">
-              <div className="gold-box text-center relative overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none">
-                  {[...Array(20)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-3 h-3 bg-gold-leaf rounded-full animate-float"
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 2}s`,
-                        animationDuration: `${2 + Math.random() * 2}s`,
-                      }}
-                    />
-                  ))}
-                </div>
-                <div className="relative z-10">
-                  <p className="text-4xl sm:text-5xl font-bold mb-4 animate-bounce">🎉 You Won! 🎉</p>
-                  <p className="text-xl sm:text-2xl mb-6">
-                    All tiles matched in{' '}
-                    <span className="font-bold text-2xl sm:text-3xl">{moves}</span> moves!
-                  </p>
-                  <button onClick={initGame} className="btn-primary text-lg sm:text-xl">
-                    PLAY AGAIN
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         )}
 
-        {/* Stuck Modal */}
-        {isStuck && !gameWon && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn p-4">
-            <div className="card-elegant max-w-lg w-full">
-              <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl border-2 border-orange-300">
-                <p className="text-3xl sm:text-4xl font-bold mb-4 text-orange-800">😔 No More Moves!</p>
-                <p className="text-lg sm:text-xl mb-6 text-orange-700">
-                  No matching pairs are available. Shuffle the tiles or start a new game.
-                </p>
-                <div className="flex gap-3 justify-center flex-wrap">
+        {/* ── Active Game ── */}
+        {difficulty && (
+          <>
+            {/* Stats & Controls */}
+            <div className="card-elegant mb-4 relative z-10">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex gap-4 sm:gap-6">
+                  <div className="text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-spa-teal-dark">{formatTime(elapsed)}</div>
+                    <div className="text-sm text-slate-grey">Time</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-spa-teal-dark">{moves}</div>
+                    <div className="text-sm text-slate-grey">Moves</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl sm:text-2xl font-bold text-spa-teal-dark">{remainingCount}</div>
+                    <div className="text-sm text-slate-grey">Remaining</div>
+                  </div>
+                  <div className="text-center">
+                    <div className={`text-xl sm:text-2xl font-bold px-2 py-0.5 rounded-lg text-white ${
+                      difficulty === 'easy' ? 'bg-green-500' :
+                      difficulty === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}>{difficultyLabel}</div>
+                    <div className="text-sm text-slate-grey">Level</div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleHint}
+                    className="bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2 px-4 rounded-xl shadow hover:shadow-md transition-all duration-300 text-base sm:text-lg active:scale-95"
+                  >
+                    Hint
+                  </button>
                   <button
                     onClick={handleShuffle}
-                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold py-3 px-6 rounded-xl shadow hover:shadow-md transition-all duration-300 text-lg active:scale-95"
+                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold py-2 px-4 rounded-xl shadow hover:shadow-md transition-all duration-300 text-base sm:text-lg active:scale-95"
                   >
-                    SHUFFLE TILES
+                    Shuffle
                   </button>
-                  <button onClick={initGame} className="btn-primary text-lg">
-                    NEW GAME
+                  <button
+                    onClick={() => initGame(difficulty)}
+                    className="bg-gradient-to-r from-spa-teal to-spa-teal-dark text-white font-semibold py-2 px-4 rounded-xl shadow hover:shadow-md transition-all duration-300 text-base sm:text-lg active:scale-95"
+                  >
+                    New Game
+                  </button>
+                  <button
+                    onClick={handleChangeDifficulty}
+                    className="bg-gradient-to-r from-slate-grey to-slate-grey-dark text-white font-semibold py-2 px-4 rounded-xl shadow hover:shadow-md transition-all duration-300 text-base sm:text-lg active:scale-95"
+                  >
+                    Change
                   </button>
                 </div>
               </div>
             </div>
-          </div>
+
+            {/* Instructions */}
+            <div className="card-elegant mb-4 p-3 text-center relative z-10">
+              <p className="text-lg sm:text-xl text-charcoal">
+                Click two matching tiles to remove them — only <span className="font-bold text-spa-teal-dark">free tiles</span> (bright) can be selected
+              </p>
+            </div>
+
+            {/* Board */}
+            <div ref={boardContainerRef} className="relative z-10">
+              <div className="flex justify-center">
+                <div
+                  className="rounded-2xl shadow-2xl bg-gradient-to-br from-spa-teal/10 to-lavender/10 border-2 border-spa-teal/20 overflow-hidden"
+                  style={{
+                    width:  ((layoutRef.current?.w ?? 0) + 32) * boardScale + 'px',
+                    height: ((layoutRef.current?.h ?? 0) + 32) * boardScale + 'px',
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: '16px',
+                      width:  (layoutRef.current?.w ?? 0) + 32 + 'px',
+                      height: (layoutRef.current?.h ?? 0) + 32 + 'px',
+                      transform: `scale(${boardScale})`,
+                      transformOrigin: 'top left',
+                    }}
+                  >
+                    <div style={{ position: 'relative', width: (layoutRef.current?.w ?? 0) + 'px', height: (layoutRef.current?.h ?? 0) + 'px' }}>
+                      {tiles.map(tile => {
+                        if (tile.removed) return null;
+
+                        const free       = isTileFree(tile.id, tiles);
+                        const isSelected = selected === tile.id;
+                        const isHint     = hintIds.includes(tile.id);
+
+                        const x      = PADDING + tile.col * TILE_STEP + tile.layer * DEPTH_X;
+                        const y      = PADDING + tile.row * TILE_STEP - tile.layer * DEPTH_Y;
+                        const zIndex = tile.layer * 200 + tile.col + tile.row;
+
+                        let bgClass, borderClass, shadowStyle, filterStyle;
+                        if (isSelected) {
+                          bgClass = 'bg-gradient-to-br from-gold-leaf-light to-gold-leaf';
+                          borderClass = 'border-gold-leaf-dark';
+                          shadowStyle = '0 0 0 3px #9B7E1F, 2px 4px 10px rgba(0,0,0,0.4)';
+                          filterStyle = 'none';
+                        } else if (isHint) {
+                          bgClass = 'bg-gradient-to-br from-green-50 to-green-100';
+                          borderClass = 'border-green-500';
+                          shadowStyle = '0 0 0 3px #22c55e, 2px 4px 10px rgba(0,0,0,0.4)';
+                          filterStyle = 'none';
+                        } else if (free) {
+                          bgClass = 'bg-gradient-to-br from-white to-warm-cream';
+                          borderClass = 'border-spa-teal/50 hover:border-spa-teal';
+                          shadowStyle = '2px 3px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.9)';
+                          filterStyle = 'none';
+                        } else {
+                          bgClass = 'bg-white';
+                          borderClass = 'border-slate-300';
+                          shadowStyle = '1px 2px 4px rgba(0,0,0,0.15)';
+                          filterStyle = 'grayscale(1) opacity(0.55)';
+                        }
+
+                        return (
+                          <button
+                            key={tile.id}
+                            onClick={() => handleTileClick(tile.id)}
+                            disabled={!free}
+                            title={free ? `${tile.sym} — click to select` : `${tile.sym} — blocked`}
+                            style={{
+                              position: 'absolute', left: x + 'px', top: y + 'px',
+                              width: TILE_SIZE + 'px', height: TILE_SIZE + 'px',
+                              zIndex, fontSize: '52px', lineHeight: '1',
+                              boxShadow: shadowStyle, filter: filterStyle,
+                            }}
+                            className={`
+                              rounded-lg flex items-center justify-center select-none
+                              transition-all duration-150 ${bgClass} ${borderClass}
+                              ${free ? 'border-4 cursor-pointer hover:scale-105 active:scale-95' : 'border cursor-not-allowed'}
+                              ${isSelected || isHint ? 'scale-105' : ''}
+                            `}
+                          >
+                            {tile.sym}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Win Modal */}
+            {gameWon && (
+              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn p-4">
+                <div className="card-elegant max-w-lg w-full">
+                  <div className="gold-box text-center relative overflow-hidden">
+                    <div className="absolute inset-0 pointer-events-none">
+                      {[...Array(20)].map((_, i) => (
+                        <div key={i} className="absolute w-3 h-3 bg-gold-leaf rounded-full animate-float"
+                          style={{
+                            left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 2}s`, animationDuration: `${2 + Math.random() * 2}s`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <div className="relative z-10">
+                      <p className="text-4xl sm:text-5xl font-bold mb-4 animate-bounce">🎉 You Won! 🎉</p>
+                      <p className="text-xl sm:text-2xl mb-2">
+                        All tiles matched in <span className="font-bold text-2xl sm:text-3xl">{moves}</span> moves
+                      </p>
+                      <p className="text-xl sm:text-2xl mb-6">
+                        Time: <span className="font-bold text-2xl sm:text-3xl">{formatTime(elapsed)}</span>
+                      </p>
+                      <div className="flex gap-3 justify-center flex-wrap">
+                        <button onClick={() => initGame(difficulty)} className="btn-primary text-lg sm:text-xl">
+                          PLAY AGAIN
+                        </button>
+                        <button onClick={handleChangeDifficulty} className="btn-secondary text-lg sm:text-xl">
+                          CHANGE DIFFICULTY
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Stuck Modal */}
+            {isStuck && !gameWon && (
+              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn p-4">
+                <div className="card-elegant max-w-lg w-full">
+                  <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl border-2 border-orange-300">
+                    <p className="text-3xl sm:text-4xl font-bold mb-4 text-orange-800">😔 No More Moves!</p>
+                    <p className="text-lg sm:text-xl mb-6 text-orange-700">
+                      No matching pairs are available. Shuffle the tiles or start a new game.
+                    </p>
+                    <div className="flex gap-3 justify-center flex-wrap">
+                      <button
+                        onClick={handleShuffle}
+                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold py-3 px-6 rounded-xl shadow hover:shadow-md transition-all duration-300 text-lg active:scale-95"
+                      >
+                        SHUFFLE TILES
+                      </button>
+                      <button onClick={() => initGame(difficulty)} className="btn-primary text-lg">
+                        NEW GAME
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </>
