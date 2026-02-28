@@ -206,6 +206,37 @@ const Dashboard = () => {
           </Link>
         </div>
 
+        {/* Jigsaw Puzzle Card */}
+        <div className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white via-green-50 to-white border-4 border-white shadow-xl relative overflow-hidden">
+          {/* Decorative corner flourishes */}
+          <div className="absolute top-2 left-2 text-3xl opacity-40" style={{color:'#166534'}}>❀</div>
+          <div className="absolute top-2 right-2 text-3xl opacity-40" style={{color:'#16a34a'}}>✿</div>
+          <div className="absolute bottom-2 left-2 text-3xl opacity-40" style={{color:'#16a34a'}}>✿</div>
+          <div className="absolute bottom-2 right-2 text-3xl opacity-40" style={{color:'#166534'}}>❀</div>
+
+          <div className="text-center mb-6 relative z-10">
+            <div className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110 hover:rotate-12 border-4 border-white"
+                 style={{background:'linear-gradient(135deg,#4ade80,#166534)'}}>
+              <svg className="w-14 h-14 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/>
+              </svg>
+            </div>
+            <h3 className="text-3xl sm:text-4xl font-script font-bold mb-3" style={{color:'#166534'}}>
+              Jigsaw Puzzle
+            </h3>
+            <p className="text-lg sm:text-xl text-slate-grey-dark font-light mb-6">
+              Assemble a photo piece by piece
+            </p>
+          </div>
+          <Link
+            to="/jigsaw"
+            className="w-full text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10 block text-center"
+            style={{background:'linear-gradient(to right,#4ade80,#166534)'}}
+          >
+            Play
+          </Link>
+        </div>
+
       </div>
 
       {/* About link - subtle in bottom right corner */}
