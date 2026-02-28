@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import WordSearch from './components/WordSearch';
 import MemoryMatch from './components/MemoryMatch';
 import Solitaire from './components/Solitaire';
+import MahjonggSolitaire from './components/MahjonggSolitaire';
 import About from './components/About';
 import { usePageTracking } from './hooks/usePageTracking';
 
@@ -21,6 +22,7 @@ function AppContent() {
         <Route path="/memory-match" element={<MemoryMatch />} />
         <Route path="/word-search" element={<WordSearch />} />
         <Route path="/solitaire" element={<Solitaire />} />
+        <Route path="/mahjongg" element={<MahjonggSolitaire />} />
       </Routes>
     </div>
   );
