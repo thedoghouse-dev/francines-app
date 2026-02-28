@@ -10,6 +10,7 @@ import MahjonggSolitaire from './components/MahjonggSolitaire';
 import Sudoku from './components/Sudoku';
 import JigsawPuzzle from './components/JigsawPuzzle';
 import FlowerGarden from './components/FlowerGarden';
+import BubblePop from './components/BubblePop';
 import About from './components/About';
 import { usePageTracking } from './hooks/usePageTracking';
 
@@ -29,6 +30,7 @@ function AppContent() {
         <Route path="/sudoku" element={<Sudoku />} />
         <Route path="/jigsaw" element={<JigsawPuzzle />} />
         <Route path="/flower-garden" element={<FlowerGarden />} />
+        <Route path="/bubble-pop" element={<BubblePop />} />
       </Routes>
     </div>
   );

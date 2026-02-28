@@ -266,6 +266,35 @@ const Dashboard = () => {
           </Link>
         </div>
 
+        {/* Bubble Pop Card */}
+        <div className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white via-lavender-light to-rose-light border-4 border-white shadow-xl relative overflow-hidden">
+          {/* Decorative corner flourishes */}
+          <div className="absolute top-2 left-2 text-3xl text-lavender-dark opacity-40">❀</div>
+          <div className="absolute top-2 right-2 text-3xl text-rose opacity-40">✿</div>
+          <div className="absolute bottom-2 left-2 text-3xl text-rose opacity-40">✿</div>
+          <div className="absolute bottom-2 right-2 text-3xl text-lavender-dark opacity-40">❀</div>
+
+          <div className="text-center mb-6 relative z-10">
+            <div className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110 hover:rotate-12 border-4 border-white"
+                 style={{background:'linear-gradient(135deg,#F9A8C0,#C4B5FD,#93C5FD)'}}>
+              <span className="text-5xl">🫧</span>
+            </div>
+            <h3 className="text-3xl sm:text-4xl font-script font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-dark to-lavender-dark mb-3">
+              Bubble Pop
+            </h3>
+            <p className="text-lg sm:text-xl text-slate-grey-dark font-light mb-6">
+              Swap & match 3 bubbles to pop!
+            </p>
+          </div>
+          <Link
+            to="/bubble-pop"
+            className="w-full text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10 block text-center"
+            style={{background:'linear-gradient(to right,#F9A8C0,#C4B5FD)'}}
+          >
+            Play
+          </Link>
+        </div>
+
       </div>
 
       {/* About link - subtle in bottom right corner */}
