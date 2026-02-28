@@ -42,7 +42,7 @@ const LAYOUT_EASY_TALL = (() => {
 })();
 
 // ── Medium layouts: 72 tiles, 3 layers ────────────────────────────────────
-// Wide: 8 cols × 5 rows base  |  Tall: 5 cols × 8 rows base
+// Wide: 8 cols × 5 rows base  |  Tall: 5 cols × 7 rows base
 const LAYOUT_MED_WIDE = (() => {
   const p = [];
   for (let r = 0; r < 5; r++) for (let c = 0; c < 8; c++) p.push({ col: c, row: r, layer: 0 });
@@ -52,15 +52,15 @@ const LAYOUT_MED_WIDE = (() => {
 })();
 const LAYOUT_MED_TALL = (() => {
   const p = [];
-  for (let r = 0; r < 8; r++) for (let c = 0; c < 5; c++) p.push({ col: c, row: r, layer: 0 });
-  for (let r = 0; r < 8; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 1 });
-  for (let r = 2; r < 6; r++) for (let c = 1; c < 3; c++) p.push({ col: c, row: r, layer: 2 });
-  return p; // 40 + 24 + 8 = 72
+  for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) p.push({ col: c, row: r, layer: 0 }); // 35
+  for (let r = 0; r < 7; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 1 }); // 21
+  for (let r = 2; r < 6; r++) for (let c = 1; c < 5; c++) p.push({ col: c, row: r, layer: 2 }); // 16
+  return p; // 35 + 21 + 16 = 72
 })();
 
 // ── Hard layouts: 72 tiles, 4 layers ──────────────────────────────────────
 // Wide: 8 cols × 4 rows base, with a double-stacked inner core
-// Tall: 5 cols × 8 rows base, narrow inner pyramid
+// Tall: 5 cols × 7 rows base, narrow inner pyramid
 const LAYOUT_HARD_WIDE = (() => {
   const p = [];
   for (let r = 0; r < 4; r++) for (let c = 0; c < 8; c++) p.push({ col: c, row: r, layer: 0 });
@@ -71,11 +71,11 @@ const LAYOUT_HARD_WIDE = (() => {
 })();
 const LAYOUT_HARD_TALL = (() => {
   const p = [];
-  for (let r = 0; r < 8; r++) for (let c = 0; c < 5; c++) p.push({ col: c, row: r, layer: 0 });
-  for (let r = 1; r < 7; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 1 });
-  for (let r = 2; r < 6; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 2 });
-  for (let r = 3; r < 5; r++) for (let c = 2; c < 3; c++) p.push({ col: c, row: r, layer: 3 });
-  return p; // 40 + 18 + 12 + 2 = 72
+  for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) p.push({ col: c, row: r, layer: 0 }); // 35
+  for (let r = 1; r < 7; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 1 }); // 18
+  for (let r = 1; r < 6; r++) for (let c = 1; c < 4; c++) p.push({ col: c, row: r, layer: 2 }); // 15
+  for (let r = 2; r < 6; r++) for (let c = 2; c < 3; c++) p.push({ col: c, row: r, layer: 3 }); //  4
+  return p; // 35 + 18 + 15 + 4 = 72
 })();
 
 // ── Board pixel dimensions per layout ─────────────────────────────────────
@@ -86,11 +86,11 @@ const BOARD_DIMS = {
   },
   medium: {
     wide: { w: 8 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 5 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
-    tall: { w: 5 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 8 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+    tall: { w: 5 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 7 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
   },
   hard: {
     wide: { w: 8 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 4 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
-    tall: { w: 5 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 8 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
+    tall: { w: 5 * TILE_STEP + DEPTH_X * 2 + PADDING * 2, h: 7 * TILE_STEP + PADDING * 2 + DEPTH_Y * 2 },
   },
 };
 
