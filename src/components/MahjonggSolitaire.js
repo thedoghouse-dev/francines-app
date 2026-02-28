@@ -159,6 +159,14 @@ function formatTime(s) {
   return `${m}:${(s % 60).toString().padStart(2, '0')}`;
 }
 
+// Compute board scale using window width (works before the board div renders)
+function computeScale(layout) {
+  // p-4 = 16px each side on mobile, sm:p-6 = 24px each side on desktop
+  const sidePadding = window.innerWidth >= 640 ? 48 : 32;
+  const available = window.innerWidth - sidePadding;
+  return Math.min(1, available / (layout.w + 32));
+}
+
 // ── Component ──────────────────────────────────────────────────────────────
 
 const MahjonggSolitaire = () => {
@@ -172,23 +180,17 @@ const MahjonggSolitaire = () => {
   const [hintIds, setHintIds] = useState([]);
   const [boardScale, setBoardScale] = useState(1);
 
-  const boardContainerRef = useRef(null);
   const layoutRef = useRef(null);
   const timerRef = useRef(null);
 
   // Cleanup timer on unmount
   useEffect(() => () => clearInterval(timerRef.current), []);
 
-  // Scale effect — runs once on mount, updates on resize
+  // Update scale on window resize
   useEffect(() => {
     const updateScale = () => {
-      if (boardContainerRef.current && layoutRef.current) {
-        const available = boardContainerRef.current.offsetWidth;
-        const natural = layoutRef.current.w + 32;
-        setBoardScale(Math.min(1, available / natural));
-      }
+      if (layoutRef.current) setBoardScale(computeScale(layoutRef.current));
     };
-    updateScale();
     window.addEventListener('resize', updateScale);
     return () => window.removeEventListener('resize', updateScale);
   }, []);
@@ -204,6 +206,7 @@ const MahjonggSolitaire = () => {
   const initGame = (diff) => {
     const layout = chooseLayout(diff);
     layoutRef.current = layout;
+    setBoardScale(computeScale(layout));
     setTiles(createTiles(layout.positions));
     setSelected(null);
     setMoves(0);
@@ -211,11 +214,6 @@ const MahjonggSolitaire = () => {
     setIsStuck(false);
     setHintIds([]);
     startTimer();
-    // Re-run scale now that layoutRef is populated
-    if (boardContainerRef.current) {
-      const available = boardContainerRef.current.offsetWidth;
-      setBoardScale(Math.min(1, available / (layout.w + 32)));
-    }
   };
 
   const handleSelectDifficulty = (diff) => {
@@ -438,7 +436,7 @@ const MahjonggSolitaire = () => {
             </div>
 
             {/* Board */}
-            <div ref={boardContainerRef} className="relative z-10">
+            <div className="relative z-10">
               <div className="flex justify-center">
                 <div
                   className="rounded-2xl shadow-2xl bg-gradient-to-br from-spa-teal/10 to-lavender/10 border-2 border-spa-teal/20 overflow-hidden"
