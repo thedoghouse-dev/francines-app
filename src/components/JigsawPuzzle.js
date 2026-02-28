@@ -4,21 +4,15 @@ import { Helmet } from 'react-helmet-async';
 
 const IMAGE_CATEGORIES = [
   {
-    label: 'Schnauzers',
-    emoji: '🐾',
-    images: [
-      { src: '/images/schnauzers/schnauzer-1.jpg', label: 'Photo 1' },
-      { src: '/images/schnauzers/schnauzer-2.jpg', label: 'Photo 2' },
-      { src: '/images/schnauzers/schnauzer-3.jpg', label: 'Photo 3' },
-      { src: '/images/schnauzers/schnauzer-4.jpg', label: 'Photo 4' },
-      { src: '/images/schnauzers/schnauzer-5.jpg', label: 'Photo 5' },
-      { src: '/images/schnauzers/schnauzer-6.jpg', label: 'Photo 6' },
-    ],
-  },
-  {
     label: 'Dogs',
     emoji: '🐶',
     images: [
+      { src: '/images/schnauzers/schnauzer-1.jpg', label: 'Schnauzer 1' },
+      { src: '/images/schnauzers/schnauzer-2.jpg', label: 'Schnauzer 2' },
+      { src: '/images/schnauzers/schnauzer-3.jpg', label: 'Schnauzer 3' },
+      { src: '/images/schnauzers/schnauzer-4.jpg', label: 'Schnauzer 4' },
+      { src: '/images/schnauzers/schnauzer-5.jpg', label: 'Schnauzer 5' },
+      { src: '/images/schnauzers/schnauzer-6.jpg', label: 'Schnauzer 6' },
       { src: '/images/jigsaw/dogs/dog-1.jpg', label: 'Golden Retriever' },
       { src: '/images/jigsaw/dogs/dog-2.jpg', label: 'Dalmatian' },
       { src: '/images/jigsaw/dogs/dog-3.jpg', label: 'Welsh Corgi' },
