@@ -100,49 +100,55 @@ const BubblePop = () => {
   const [grid,       setGrid]       = useState(makeGrid);
   const [selected,   setSelected]   = useState(null);   // [r,c] | null
   const [matched,    setMatched]    = useState(null);   // 2D bool | null
-  const [processing, setProcessing] = useState(false);
+  const [processing, setProcessing] = useState(false);  // for UI (cursor, button disabled)
   const [score,      setScore]      = useState(0);
   const [moves,      setMoves]      = useState(0);
   const [hint,       setHint]       = useState(null);   // [[r1,c1],[r2,c2]] | null
 
-  const mountedRef  = useRef(true);
-  const hintTimerRef = useRef(null);
+  // processingRef is a synchronous lock — avoids stale-closure reads of processing state
+  const processingRef = useRef(false);
+  // mountedRef is set true inside the effect so it re-initialises correctly in StrictMode
+  const mountedRef    = useRef(false);
+  const hintTimerRef  = useRef(null);
 
-  useEffect(() => () => { mountedRef.current = false; }, []);
-
-  // ── Match processing loop ────────────────────────────────────
-  const processBoard = useCallback((startGrid) => {
-    setProcessing(true);
-
-    const loop = (g) => {
-      if (!mountedRef.current) return;
-      const m = findMatches(g);
-      const n = countMatched(m);
-
-      if (n === 0) {
-        setProcessing(false);
-        setMatched(null);
-        return;
-      }
-
-      setMatched(m);
-      setScore(s => s + n * 10);
-
-      setTimeout(() => {
-        if (!mountedRef.current) return;
-        const next = dropAndFill(g, m);
-        setGrid(next);
-        setMatched(null);
-        setTimeout(() => loop(next), 350);
-      }, 550);
-    };
-
-    loop(startGrid);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
   }, []);
+
+  // ── Cascade cycle: runs repeatedly until no matches remain ───
+  const runCycle = useCallback((g) => {
+    if (!mountedRef.current) return;
+
+    const m = findMatches(g);
+    const n = countMatched(m);
+
+    if (n === 0) {
+      // No more matches — unlock the board
+      processingRef.current = false;
+      setProcessing(false);
+      setMatched(null);
+      return;
+    }
+
+    // Show matched tiles popping out
+    setMatched(m);
+    setScore(s => s + n * 10);
+
+    // After pop animation, drop tiles and refill
+    setTimeout(() => {
+      if (!mountedRef.current) return;
+      const next = dropAndFill(g, m);
+      setGrid(next);
+      setMatched(null);
+      // Short pause then check for cascades
+      setTimeout(() => runCycle(next), 350);
+    }, 550);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Tile click handler ───────────────────────────────────────
   const handleClick = (r, c) => {
-    if (processing) return;
+    if (processingRef.current) return;  // synchronous guard
 
     // Clear hint
     setHint(null);
@@ -166,7 +172,10 @@ const BubblePop = () => {
     if (countMatched(m) > 0) {
       setGrid(newGrid);
       setMoves(mv => mv + 1);
-      processBoard(newGrid);
+      // Lock the board synchronously before any async state update
+      processingRef.current = true;
+      setProcessing(true);
+      runCycle(newGrid);
     } else {
       // Briefly show the swap then revert (invalid move feedback)
       setGrid(newGrid);
@@ -181,6 +190,7 @@ const BubblePop = () => {
 
   // ── Hint ─────────────────────────────────────────────────────
   const showHint = () => {
+    if (processingRef.current) return;
     setHint(null);
     if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
     const h = findHint(grid);
@@ -197,6 +207,7 @@ const BubblePop = () => {
   const newGame = () => {
     setHint(null);
     if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
+    processingRef.current = false;
     setGrid(makeGrid());
     setSelected(null);
     setMatched(null);
@@ -287,11 +298,11 @@ const BubblePop = () => {
       >
         {grid.map((row, r) =>
           row.map((gemId, c) => {
-            const gem   = GEMS[gemId];
-            const sel   = isSelected(r, c);
-            const mat   = isMatched(r, c);
-            const hint  = isHinted(r, c);
-            const nbr   = isNeighbor(r, c);
+            const gem  = GEMS[gemId];
+            const sel  = isSelected(r, c);
+            const mat  = isMatched(r, c);
+            const hlt  = isHinted(r, c);
+            const nbr  = isNeighbor(r, c);
 
             return (
               <button
@@ -302,7 +313,7 @@ const BubblePop = () => {
                   background: `radial-gradient(circle at 35% 30%, ${gem.light}, ${gem.color})`,
                   boxShadow: sel
                     ? `0 0 0 3px ${gem.ring}, 0 0 12px ${gem.ring}88, inset 0 2px 4px rgba(255,255,255,0.6)`
-                    : hint
+                    : hlt
                     ? `0 0 0 3px gold, 0 0 10px gold`
                     : nbr
                     ? `0 0 0 2px ${gem.ring}88, inset 0 2px 4px rgba(255,255,255,0.5)`
@@ -311,7 +322,7 @@ const BubblePop = () => {
                     ? 'popOut 0.5s ease-out forwards'
                     : sel
                     ? 'pulse 0.9s ease-in-out infinite'
-                    : hint
+                    : hlt
                     ? 'hintPulse 0.8s ease-in-out infinite'
                     : undefined,
                   transform: sel && !mat ? 'scale(1.1)' : undefined,
