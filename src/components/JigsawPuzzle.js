@@ -2,14 +2,59 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
-const PUZZLE_IMAGES = [
-  { src: '/images/schnauzers/schnauzer-1.jpg', label: 'Photo 1' },
-  { src: '/images/schnauzers/schnauzer-2.jpg', label: 'Photo 2' },
-  { src: '/images/schnauzers/schnauzer-3.jpg', label: 'Photo 3' },
-  { src: '/images/schnauzers/schnauzer-4.jpg', label: 'Photo 4' },
-  { src: '/images/schnauzers/schnauzer-5.jpg', label: 'Photo 5' },
-  { src: '/images/schnauzers/schnauzer-6.jpg', label: 'Photo 6' },
+const IMAGE_CATEGORIES = [
+  {
+    label: 'Schnauzers',
+    emoji: '🐾',
+    images: [
+      { src: '/images/schnauzers/schnauzer-1.jpg', label: 'Photo 1' },
+      { src: '/images/schnauzers/schnauzer-2.jpg', label: 'Photo 2' },
+      { src: '/images/schnauzers/schnauzer-3.jpg', label: 'Photo 3' },
+      { src: '/images/schnauzers/schnauzer-4.jpg', label: 'Photo 4' },
+      { src: '/images/schnauzers/schnauzer-5.jpg', label: 'Photo 5' },
+      { src: '/images/schnauzers/schnauzer-6.jpg', label: 'Photo 6' },
+    ],
+  },
+  {
+    label: 'Dogs',
+    emoji: '🐶',
+    images: [
+      { src: '/images/jigsaw/dogs/dog-1.jpg', label: 'Golden Retriever' },
+      { src: '/images/jigsaw/dogs/dog-2.jpg', label: 'Dalmatian' },
+      { src: '/images/jigsaw/dogs/dog-3.jpg', label: 'Welsh Corgi' },
+    ],
+  },
+  {
+    label: 'Gardening',
+    emoji: '🌷',
+    images: [
+      { src: '/images/jigsaw/gardening/garden-1.jpg', label: 'Keukenhof Tulips' },
+      { src: '/images/jigsaw/gardening/garden-2.jpg', label: 'Sunflower Field' },
+      { src: '/images/jigsaw/gardening/garden-3.jpg', label: 'Red Tulips' },
+    ],
+  },
+  {
+    label: 'Art',
+    emoji: '🎨',
+    images: [
+      { src: '/images/jigsaw/art/art-1.jpg', label: 'Starry Night (Van Gogh)' },
+      { src: '/images/jigsaw/art/art-2.jpg', label: 'Composition VIII (Kandinsky)' },
+      { src: '/images/jigsaw/art/art-3.jpg', label: 'The Kiss (Klimt)' },
+    ],
+  },
+  {
+    label: '60s & 70s',
+    emoji: '✌️',
+    images: [
+      { src: '/images/jigsaw/retro/retro-1.jpg', label: 'Mid-Century Modern' },
+      { src: '/images/jigsaw/retro/retro-2.jpg', label: 'Tie-Dye' },
+      { src: '/images/jigsaw/retro/retro-3.jpg', label: 'Psychedelic Fabric' },
+    ],
+  },
 ];
+
+// Flat list used internally — kept for backwards compat with any default reference
+const PUZZLE_IMAGES = IMAGE_CATEGORIES.flatMap(c => c.images);
 
 const DIFFICULTIES = [
   { value: 'easy',   label: 'Easy',   grid: 3, description: '3×3 · 9 pieces' },
@@ -50,8 +95,9 @@ const JigsawPuzzle = () => {
   const [screen, setScreen] = useState('setup');
 
   // ── setup choices
-  const [chosenImage,      setChosenImage]      = useState(PUZZLE_IMAGES[0]);
-  const [chosenDifficulty, setChosenDifficulty] = useState('easy');
+  const [activeCategory,   setActiveCategory]   = useState(0);
+  const [chosenImage,      setChosenImage]       = useState(PUZZLE_IMAGES[0]);
+  const [chosenDifficulty, setChosenDifficulty]  = useState('easy');
 
   // ── active game state
   const [gameImage, setGameImage] = useState(PUZZLE_IMAGES[0]);
@@ -176,13 +222,35 @@ const JigsawPuzzle = () => {
           <p className="text-xl text-slate-grey">Choose a photo and difficulty, then start!</p>
         </header>
 
-        {/* Photo selector */}
-        <section className="mb-10 w-full max-w-lg">
+        {/* Photo selector with category tabs */}
+        <section className="mb-10 w-full max-w-xl">
           <h2 className="text-2xl font-display font-semibold text-charcoal text-center mb-5">
             Choose a Photo
           </h2>
+
+          {/* Category tabs */}
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
+            {IMAGE_CATEGORIES.map((cat, idx) => (
+              <button
+                key={cat.label}
+                onClick={() => {
+                  setActiveCategory(idx);
+                  setChosenImage(cat.images[0]);
+                }}
+                className={`px-4 py-2 rounded-full text-base font-semibold transition-all duration-200 border-2 focus:outline-none
+                  ${activeCategory === idx
+                    ? 'bg-rose-dark text-white border-rose-dark shadow-md scale-105'
+                    : 'bg-white text-charcoal border-warm-cream-dark hover:border-rose hover:scale-105'
+                  }`}
+              >
+                {cat.emoji} {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Images for active category */}
           <div className="grid grid-cols-3 gap-3 sm:gap-4">
-            {PUZZLE_IMAGES.map((img) => (
+            {IMAGE_CATEGORIES[activeCategory].images.map((img) => (
               <button
                 key={img.src}
                 onClick={() => setChosenImage(img)}
