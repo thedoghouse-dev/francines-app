@@ -43,7 +43,19 @@ const IMAGE_CATEGORIES = [
     ],
   },
   {
-    label: '60s & 70s',
+    label: '1960s',
+    emoji: '🕰️',
+    images: [
+      { src: '/images/jigsaw/1960s/photo-1.png', label: 'Photo 1' },
+      { src: '/images/jigsaw/1960s/photo-2.png', label: 'Photo 2' },
+      { src: '/images/jigsaw/1960s/photo-3.png', label: 'Photo 3' },
+      { src: '/images/jigsaw/1960s/photo-4.png', label: 'Photo 4' },
+      { src: '/images/jigsaw/1960s/photo-5.png', label: 'Photo 5' },
+      { src: '/images/jigsaw/1960s/photo-6.png', label: 'Photo 6' },
+    ],
+  },
+  {
+    label: '1970s',
     emoji: '✌️',
     images: [
       { src: '/images/jigsaw/retro/retro-1.jpg', label: 'Mid-Century Modern' },
