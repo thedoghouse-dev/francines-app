@@ -22,9 +22,12 @@ const IMAGE_CATEGORIES = [
     label: 'Gardening',
     emoji: '🌷',
     images: [
-      { src: '/images/jigsaw/gardening/garden-1.jpg', label: 'Keukenhof Tulips' },
-      { src: '/images/jigsaw/gardening/garden-2.jpg', label: 'Sunflower Field' },
-      { src: '/images/jigsaw/gardening/garden-3.jpg', label: 'Red Tulips' },
+      { src: '/images/jigsaw/gardening/photo-1.png', label: 'Photo 1' },
+      { src: '/images/jigsaw/gardening/photo-2.png', label: 'Photo 2' },
+      { src: '/images/jigsaw/gardening/photo-3.png', label: 'Photo 3' },
+      { src: '/images/jigsaw/gardening/photo-4.png', label: 'Photo 4' },
+      { src: '/images/jigsaw/gardening/photo-5.png', label: 'Photo 5' },
+      { src: '/images/jigsaw/gardening/photo-6.png', label: 'Photo 6' },
     ],
   },
   {
