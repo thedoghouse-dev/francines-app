@@ -174,8 +174,6 @@ const Dashboard = () => {
           </Link>
         </div>
 
-      </div>
-
         {/* Sudoku Card */}
         <div className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white via-blue-50 to-white border-4 border-white shadow-xl relative overflow-hidden">
           {/* Decorative corner flourishes */}
@@ -207,6 +205,8 @@ const Dashboard = () => {
             Play
           </Link>
         </div>
+
+      </div>
 
       {/* About link - subtle in bottom right corner */}
       <div className="fixed bottom-6 right-6 z-20">
