@@ -237,6 +237,35 @@ const Dashboard = () => {
           </Link>
         </div>
 
+        {/* Flower Garden Card */}
+        <div className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white via-green-50 to-rose-light border-4 border-white shadow-xl relative overflow-hidden">
+          {/* Decorative corner flourishes */}
+          <div className="absolute top-2 left-2 text-3xl opacity-40" style={{color:'#15803d'}}>❀</div>
+          <div className="absolute top-2 right-2 text-3xl opacity-40" style={{color:'#E75B8D'}}>✿</div>
+          <div className="absolute bottom-2 left-2 text-3xl opacity-40" style={{color:'#E75B8D'}}>✿</div>
+          <div className="absolute bottom-2 right-2 text-3xl opacity-40" style={{color:'#15803d'}}>❀</div>
+
+          <div className="text-center mb-6 relative z-10">
+            <div className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110 hover:rotate-12 border-4 border-white"
+                 style={{background:'linear-gradient(135deg,#86efac,#15803d)'}}>
+              <span className="text-5xl">🌸</span>
+            </div>
+            <h3 className="text-3xl sm:text-4xl font-script font-bold mb-3" style={{color:'#15803d'}}>
+              Flower Garden
+            </h3>
+            <p className="text-lg sm:text-xl text-slate-grey-dark font-light mb-6">
+              Plant seeds and watch them bloom
+            </p>
+          </div>
+          <Link
+            to="/flower-garden"
+            className="w-full text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10 block text-center"
+            style={{background:'linear-gradient(to right,#86efac,#15803d)'}}
+          >
+            Play
+          </Link>
+        </div>
+
       </div>
 
       {/* About link - subtle in bottom right corner */}
