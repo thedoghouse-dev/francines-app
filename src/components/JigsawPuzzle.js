@@ -58,9 +58,12 @@ const IMAGE_CATEGORIES = [
     label: '1970s',
     emoji: '✌️',
     images: [
-      { src: '/images/jigsaw/retro/retro-1.jpg', label: 'Mid-Century Modern' },
-      { src: '/images/jigsaw/retro/retro-2.jpg', label: 'Tie-Dye' },
-      { src: '/images/jigsaw/retro/retro-3.jpg', label: 'Psychedelic Fabric' },
+      { src: '/images/jigsaw/1970s/photo-1.png', label: 'Photo 1' },
+      { src: '/images/jigsaw/1970s/photo-2.png', label: 'Photo 2' },
+      { src: '/images/jigsaw/1970s/photo-3.png', label: 'Photo 3' },
+      { src: '/images/jigsaw/1970s/photo-4.png', label: 'Photo 4' },
+      { src: '/images/jigsaw/1970s/photo-5.png', label: 'Photo 5' },
+      { src: '/images/jigsaw/1970s/photo-6.png', label: 'Photo 6' },
     ],
   },
 ];
