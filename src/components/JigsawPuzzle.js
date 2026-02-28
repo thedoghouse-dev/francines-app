@@ -372,21 +372,44 @@ const JigsawPuzzle = () => {
         <title>Jigsaw Puzzle - Francine's App</title>
       </Helmet>
 
-      {/* Header */}
-      <header className="text-center mb-4">
-        <h1 className="text-4xl sm:text-5xl font-script font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-dark via-lavender-dark to-rose-dark mb-2">
-          Jigsaw Puzzle
-        </h1>
-        <div className="flex items-center justify-center gap-6 text-lg text-slate-grey-dark">
-          <span>Moves: <strong>{moves}</strong></span>
-          <span>
-            Placed:{' '}
-            <strong className={correctCount === totalPieces ? 'text-green-600' : ''}>
-              {correctCount}/{totalPieces}
-            </strong>
-          </span>
+      {/* Header row: Home button left, title centre, stats right */}
+      <div className="flex items-center justify-between max-w-5xl mx-auto mb-4">
+        <Link
+          to="/"
+          className="bg-gradient-to-r from-slate-grey to-slate-grey-dark text-white font-semibold py-2 px-5 rounded-xl shadow-lg text-base"
+        >
+          ← Home
+        </Link>
+
+        <div className="text-center">
+          <h1 className="text-3xl sm:text-4xl font-script font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-dark via-lavender-dark to-rose-dark">
+            Jigsaw Puzzle
+          </h1>
+          <div className="flex items-center justify-center gap-6 text-base text-slate-grey-dark mt-1">
+            <span>Moves: <strong>{moves}</strong></span>
+            <span>
+              Placed:{' '}
+              <strong className={correctCount === totalPieces ? 'text-green-600' : ''}>
+                {correctCount}/{totalPieces}
+              </strong>
+            </span>
+          </div>
         </div>
-      </header>
+
+        {/* Spacer to keep title centred */}
+        <div className="w-24 sm:w-28" />
+      </div>
+
+      {/* Reference photo */}
+      <div className="flex flex-col items-center mb-4">
+        <p className="text-slate-grey font-semibold text-sm mb-2">Reference Photo</p>
+        <img
+          src={gameImage.src}
+          alt="Reference"
+          className="rounded-2xl shadow-lg border-4 border-peach-dark"
+          style={{ width: Math.min(160, gridSize * pieceSize * 0.43), height: 'auto' }}
+        />
+      </div>
 
       {/* Hint bar */}
       <p className="text-center text-base text-slate-grey mb-4 min-h-6">
@@ -397,86 +420,53 @@ const JigsawPuzzle = () => {
           : 'Tap a piece from the tray below, then tap a board slot to place it'}
       </p>
 
-      {/* Main area: board + side panel */}
-      <div className="flex flex-col lg:flex-row gap-6 items-start justify-center max-w-5xl mx-auto">
+      {/* Puzzle board */}
+      <div className="flex flex-col items-center overflow-x-auto max-w-5xl mx-auto">
+        <div
+          className="rounded-2xl border-4 border-lavender-dark shadow-2xl bg-warm-cream-dark"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${gridSize}, ${pieceSize}px)`,
+            gap: 2,
+            padding: 2,
+          }}
+        >
+          {Array.from({ length: gridSize }, (_, row) =>
+            Array.from({ length: gridSize }, (_, col) => {
+              const slotKey  = `${row}-${col}`;
+              const occupant = board[slotKey];
+              const isCorrect      = occupant === slotKey;
+              const isSelectedHere = selected?.from === 'board' && selected?.slotKey === slotKey;
+              const isTargetSlot   = hasSelection && !occupant;
 
-        {/* Puzzle Board */}
-        <div className="flex flex-col items-center overflow-x-auto">
-          <div
-            className="rounded-2xl border-4 border-lavender-dark shadow-2xl bg-warm-cream-dark"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${gridSize}, ${pieceSize}px)`,
-              gap: 2,
-              padding: 2,
-            }}
-          >
-            {Array.from({ length: gridSize }, (_, row) =>
-              Array.from({ length: gridSize }, (_, col) => {
-                const slotKey  = `${row}-${col}`;
-                const occupant = board[slotKey];
-                const isCorrect      = occupant === slotKey;
-                const isSelectedHere = selected?.from === 'board' && selected?.slotKey === slotKey;
-                const isTargetSlot   = hasSelection && !occupant;
-
-                return (
-                  <div
-                    key={slotKey}
-                    onClick={() => handleBoardSlotClick(slotKey)}
-                    className={`relative cursor-pointer overflow-hidden transition-all duration-150
-                      ${!occupant
-                        ? `border-2 border-dashed ${isTargetSlot ? 'border-rose bg-rose-light/40' : 'border-lavender/50 bg-lavender-light/20'}`
-                        : ''}
-                      ${isCorrect && !isSelectedHere ? 'ring-2 ring-inset ring-green-400' : ''}
-                      ${isSelectedHere ? 'opacity-40 ring-2 ring-inset ring-rose-dark' : ''}
-                    `}
-                    style={{ width: pieceSize, height: pieceSize }}
-                  >
-                    {occupant && (
-                      <div
-                        style={pieceStyle(occupant, gridSize, gameImage.src, pieceSize)}
-                        className="w-full h-full"
-                      />
-                    )}
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
-
-        {/* Side panel */}
-        <div className="flex flex-col items-center gap-4 lg:self-start lg:min-w-40">
-          <p className="text-slate-grey font-semibold text-sm">Reference Photo</p>
-          <img
-            src={gameImage.src}
-            alt="Reference"
-            className="rounded-2xl shadow-lg border-4 border-peach-dark"
-            style={{ width: Math.min(160, gridSize * pieceSize * 0.43), height: 'auto' }}
-          />
-          <button
-            onClick={startGame}
-            className="w-full bg-gradient-to-r from-lavender to-lavender-dark text-white font-semibold py-3 px-5 rounded-xl shadow-lg hover:shadow-xl transition-all text-lg active:scale-95"
-          >
-            Restart
-          </button>
-          <button
-            onClick={() => setScreen('setup')}
-            className="w-full bg-gradient-to-r from-peach to-peach-dark text-white font-semibold py-3 px-5 rounded-xl shadow-lg hover:shadow-xl transition-all text-lg active:scale-95"
-          >
-            New Puzzle
-          </button>
-          <Link
-            to="/"
-            className="w-full bg-gradient-to-r from-slate-grey to-slate-grey-dark text-white font-semibold py-3 px-5 rounded-xl shadow-lg text-lg text-center"
-          >
-            Home
-          </Link>
+              return (
+                <div
+                  key={slotKey}
+                  onClick={() => handleBoardSlotClick(slotKey)}
+                  className={`relative cursor-pointer overflow-hidden transition-all duration-150
+                    ${!occupant
+                      ? `border-2 border-dashed ${isTargetSlot ? 'border-rose bg-rose-light/40' : 'border-lavender/50 bg-lavender-light/20'}`
+                      : ''}
+                    ${isCorrect && !isSelectedHere ? 'ring-2 ring-inset ring-green-400' : ''}
+                    ${isSelectedHere ? 'opacity-40 ring-2 ring-inset ring-rose-dark' : ''}
+                  `}
+                  style={{ width: pieceSize, height: pieceSize }}
+                >
+                  {occupant && (
+                    <div
+                      style={pieceStyle(occupant, gridSize, gameImage.src, pieceSize)}
+                      className="w-full h-full"
+                    />
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
 
-      {/* Piece Tray */}
-      <div className="max-w-5xl mx-auto mt-6">
+      {/* Piece tray — directly under the board */}
+      <div className="max-w-5xl mx-auto mt-4">
         <p className="text-slate-grey font-semibold mb-2 text-center">
           Piece Tray — {tray.length} remaining
         </p>
@@ -501,6 +491,22 @@ const JigsawPuzzle = () => {
             })
           )}
         </div>
+      </div>
+
+      {/* Bottom buttons */}
+      <div className="flex justify-center gap-4 mt-6">
+        <button
+          onClick={startGame}
+          className="bg-gradient-to-r from-lavender to-lavender-dark text-white font-semibold py-3 px-7 rounded-xl shadow-lg hover:shadow-xl transition-all text-lg active:scale-95"
+        >
+          Restart
+        </button>
+        <button
+          onClick={() => setScreen('setup')}
+          className="bg-gradient-to-r from-peach to-peach-dark text-white font-semibold py-3 px-7 rounded-xl shadow-lg hover:shadow-xl transition-all text-lg active:scale-95"
+        >
+          New Puzzle
+        </button>
       </div>
     </div>
   );
