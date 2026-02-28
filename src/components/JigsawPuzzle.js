@@ -16,7 +16,7 @@ const IMAGE_CATEGORIES = [
     ],
   },
   {
-    label: 'Gardening',
+    label: 'Gardens',
     emoji: '🌷',
     images: [
       { src: '/images/jigsaw/gardening/photo-1.png', label: 'Photo 1' },
