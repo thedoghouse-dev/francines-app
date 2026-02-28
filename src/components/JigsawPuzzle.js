@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
+// Pre-computed so values don't change on re-render
+const CONFETTI = Array.from({ length: 50 }, (_, i) => ({
+  id: i,
+  left:     `${(i * 2.1) % 100}%`,
+  delay:    `${((i * 0.19) % 3).toFixed(2)}s`,
+  duration: `${(2.8 + (i * 0.23) % 1.8).toFixed(2)}s`,
+  color:    ['#F9A8C0','#D8B4FE','#FFD4B8','#4ade80','#60a5fa','#fbbf24','#f87171','#a78bfa','#34d399','#fb923c'][i % 10],
+  size:     `${8 + (i % 6) * 2}px`,
+  round:    i % 3 !== 0,
+}));
+
 const IMAGE_CATEGORIES = [
   {
     label: 'Dogs',
@@ -323,35 +334,76 @@ const JigsawPuzzle = () => {
   // ════════════════════════════════════════════════
   if (screen === 'win') {
     return (
-      <div className="min-h-screen p-6 flex flex-col items-center justify-center bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-rose-light via-warm-cream-light to-lavender-light text-center relative overflow-hidden p-6">
         <Helmet>
           <title>Puzzle Complete! - Francine's App</title>
         </Helmet>
-        <div className="text-8xl mb-4 animate-bounce">🎉</div>
-        <h1 className="text-5xl sm:text-6xl font-script font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-dark to-lavender-dark mb-4">
-          Puzzle Complete!
-        </h1>
-        <p className="text-2xl text-charcoal mb-1">All {totalPieces} pieces placed!</p>
-        <p className="text-xl text-slate-grey mb-8">Completed in {moves} moves</p>
-        <img
-          src={gameImage.src}
-          alt="Completed puzzle"
-          className="rounded-3xl shadow-2xl border-8 border-white mb-10"
-          style={{ maxWidth: 340, width: '90%' }}
-        />
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={() => setScreen('setup')}
-            className="bg-gradient-to-r from-rose to-rose-dark text-white font-bold py-4 px-10 rounded-2xl text-xl shadow-xl hover:shadow-2xl transition-all active:scale-95"
-          >
-            Play Again
-          </button>
-          <Link
-            to="/"
-            className="bg-gradient-to-r from-slate-grey to-slate-grey-dark text-white font-bold py-4 px-10 rounded-2xl text-xl shadow-xl text-center"
-          >
-            Home
-          </Link>
+
+        <style>{`
+          @keyframes confettiFall {
+            0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1;   }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0.2; }
+          }
+          @keyframes popIn {
+            0%   { transform: scale(0.4); opacity: 0; }
+            70%  { transform: scale(1.06); opacity: 1; }
+            100% { transform: scale(1);   opacity: 1; }
+          }
+        `}</style>
+
+        {/* Confetti */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          {CONFETTI.map(p => (
+            <div
+              key={p.id}
+              style={{
+                position: 'absolute',
+                left: p.left,
+                top: '-20px',
+                width: p.size,
+                height: p.size,
+                backgroundColor: p.color,
+                borderRadius: p.round ? '50%' : '2px',
+                animation: `confettiFall ${p.duration} ${p.delay} linear infinite`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center">
+          <h1 className="text-5xl sm:text-6xl font-script font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-dark to-lavender-dark mb-2">
+            You did it! 🎉
+          </h1>
+          <p className="text-xl text-slate-grey mb-6">
+            Completed in <strong>{moves}</strong> moves
+          </p>
+
+          <img
+            src={gameImage.src}
+            alt="Completed puzzle"
+            className="rounded-3xl shadow-2xl border-8 border-white mb-8"
+            style={{
+              maxWidth: 400,
+              width: '90%',
+              animation: 'popIn 0.7s ease-out forwards',
+            }}
+          />
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={() => setScreen('setup')}
+              className="bg-gradient-to-r from-rose to-rose-dark text-white font-bold py-4 px-10 rounded-2xl text-xl shadow-xl hover:shadow-2xl transition-all active:scale-95"
+            >
+              Play Again
+            </button>
+            <Link
+              to="/"
+              className="bg-gradient-to-r from-slate-grey to-slate-grey-dark text-white font-bold py-4 px-10 rounded-2xl text-xl shadow-xl text-center"
+            >
+              Home
+            </Link>
+          </div>
         </div>
       </div>
     );
