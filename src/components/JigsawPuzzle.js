@@ -31,9 +31,12 @@ const IMAGE_CATEGORIES = [
     label: 'Art',
     emoji: '🎨',
     images: [
-      { src: '/images/jigsaw/art/art-1.jpg', label: 'Starry Night (Van Gogh)' },
-      { src: '/images/jigsaw/art/art-2.jpg', label: 'Composition VIII (Kandinsky)' },
-      { src: '/images/jigsaw/art/art-3.jpg', label: 'The Kiss (Klimt)' },
+      { src: '/images/jigsaw/art/photo-1.png', label: 'Photo 1' },
+      { src: '/images/jigsaw/art/photo-2.png', label: 'Photo 2' },
+      { src: '/images/jigsaw/art/photo-3.png', label: 'Photo 3' },
+      { src: '/images/jigsaw/art/photo-4.png', label: 'Photo 4' },
+      { src: '/images/jigsaw/art/photo-5.png', label: 'Photo 5' },
+      { src: '/images/jigsaw/art/photo-6.png', label: 'Photo 6' },
     ],
   },
   {
