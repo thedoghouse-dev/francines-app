@@ -176,6 +176,38 @@ const Dashboard = () => {
 
       </div>
 
+        {/* Sudoku Card */}
+        <div className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white via-blue-50 to-white border-4 border-white shadow-xl relative overflow-hidden">
+          {/* Decorative corner flourishes */}
+          <div className="absolute top-2 left-2 text-3xl opacity-40" style={{color:'#1D4ED8'}}>❀</div>
+          <div className="absolute top-2 right-2 text-3xl opacity-40" style={{color:'#3B82F6'}}>✿</div>
+          <div className="absolute bottom-2 left-2 text-3xl opacity-40" style={{color:'#3B82F6'}}>✿</div>
+          <div className="absolute bottom-2 right-2 text-3xl opacity-40" style={{color:'#1D4ED8'}}>❀</div>
+
+          <div className="text-center mb-6 relative z-10">
+            <div className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110 hover:rotate-12 border-4 border-white"
+                 style={{background:'linear-gradient(135deg,#3B82F6,#1D4ED8)'}}>
+              <svg className="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <h3 className="text-3xl sm:text-4xl font-script font-bold mb-3" style={{color:'#1D4ED8'}}>
+              Sudoku
+            </h3>
+            <p className="text-lg sm:text-xl text-slate-grey-dark font-light mb-6">
+              Fill the grid with numbers 1–9
+            </p>
+          </div>
+          <Link
+            to="/sudoku"
+            className="w-full text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xl active:scale-95 relative z-10 block text-center"
+            style={{background:'linear-gradient(to right,#3B82F6,#1D4ED8)'}}
+          >
+            Play
+          </Link>
+        </div>
+
       {/* About link - subtle in bottom right corner */}
       <div className="fixed bottom-6 right-6 z-20">
         <Link
